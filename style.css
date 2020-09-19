@@ -1,0 +1,10 @@
+.header{
+    background-color: blue;
+    height: 100px;
+}
+
+.header-logo{
+    padding: 20px 20px 20px 20px;
+    font-size:60px;
+    color: red;   
+}
