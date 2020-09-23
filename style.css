@@ -93,7 +93,7 @@ footer{
 }
 .footer-contents li{
     list-style: none;
-    padding:20px 20px 20px 20px;
+    padding:15px 20px 10px 20px;
     font-size:20px;
 }
 .footer-contents a{
@@ -106,7 +106,7 @@ footer{
 }
 
 .title{
-    padding:15px 5px 5px 10px;
+    padding:20px 5px 5px 15px;
     font-size: 40px;
     font-weight: 400;
     color: rgb(28, 7, 91);
@@ -114,7 +114,7 @@ footer{
 }
 
 p{
-    padding:5px 15px 5px 15px;
+    padding:5px 15px 10px 15px;
     font-size: 20px;
     color: rgb(28, 7, 91);
        /* font-size: 100%;*/
