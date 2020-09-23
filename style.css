@@ -3,14 +3,14 @@
     margin: 0;
 }
 body{
-    font-family: "Myriad Pro", Myriad, "Liberation Sans", "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: -apple-system,"Myriad Pro", Myriad, "Liberation Sans", "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 300;
 }
 
 .header-logo img{
     display: inline-block;
     vertical-align: middle;
-    width: 4.8%; height:2.9%;
+    width: 3.85%; height:2.32%;
 }
 
 header{
@@ -23,7 +23,7 @@ span{
 
 .header-logo{
     text-align: left;
-    font-size:2vw;
+    font-size:1.8vw;
     font-weight: 400;
     padding: 10px;
     color: rgb(198, 251, 255);   
@@ -60,7 +60,7 @@ span{
 }
 
 .wrapper{
-    min-height: 80vh;
+    min-height: 70vh;
     position: relative;/*←相対位置*/
     background-color: rgb(241, 254, 255);
     text-align: center;
@@ -78,6 +78,7 @@ footer{
 }
 .footer-logo{
     font-size:14px;
+    color: wheat;
 }
 .footer-contents{
     display: flex;
@@ -99,9 +100,15 @@ footer{
 
 .title{
     padding:25px 5px 5px 10px;
-    font-size:40px;
+    font-size: 40px;
+    font-weight: 400;
+    color: rgb(28, 7, 91);
+   /* font-size:200%;*/
 }
 
 p{
+    padding:5px 15px 5px 15px;
     font-size: 20px;
+    color: rgb(28, 7, 91);
+       /* font-size: 100%;*/
 }
