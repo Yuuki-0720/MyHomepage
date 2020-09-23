@@ -70,7 +70,7 @@ span{
 footer{
     background-color: rgb(60, 19, 142);
     color:white;
-    height: 100px;
+    height: 33%;
     width: 100%;
     text-align: center;
     position: relative;
@@ -95,7 +95,9 @@ footer{
     color:white;
     display: block;
     text-decoration: none;
-
+}
+.footer-contents a:hover{
+    color: aquamarine;
 }
 
 .title{
