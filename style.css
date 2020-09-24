@@ -106,7 +106,7 @@ footer{
 }
 
 .title{
-    padding:20px 5px 5px 15px;
+    padding:20px 5px 0px 15px;
     font-size: 40px;
     font-weight: 400;
     color: rgb(28, 7, 91);
@@ -118,4 +118,8 @@ p{
     font-size: 20px;
     color: rgb(28, 7, 91);
        /* font-size: 100%;*/
+}
+
+h1{
+    font-weight: 300;
 }
