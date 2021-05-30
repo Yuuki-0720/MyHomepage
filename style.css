@@ -35,6 +35,10 @@ span{
     width: 100%;
 }
 
+.nextp-image{
+    width: 80%;
+}
+
 .top-bar{
     background-color: rgb(52, 209, 211);
 }
