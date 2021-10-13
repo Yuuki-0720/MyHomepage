@@ -32,17 +32,22 @@ span{
 }
 
 .header-image{
+    vertical-align: top;
     width: 100%;
 }
 
 .nextp-image{
     width: 80%;
 }
-
+.top-bar-front{
+    height: 2px;
+    background-color: seagreen;
+}
 .top-bar{
     background-color: rgb(52, 209, 211);
 }
 .top-bar a{
+    border-radius:2px;
     background-color: rgb(19, 119, 121);
     color:white;
     padding:1px 10px 1px 10px;
@@ -77,9 +82,14 @@ span{
     margin: auto;
     background-color: rgb(241, 254, 255);
 }
-
+.normal-text{
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: left;
+}
 .lastupdate{
     font-size: 14px;
+    text-align: center;
     padding: 15px 0px 0px;
 }
 
@@ -120,16 +130,20 @@ footer{
     padding:20px 5px 0px 15px;
     font-size: 40px;
     font-weight: 400;
+    text-align: center;
     color: rgb(28, 7, 91);
    /* font-size:200%;*/
 }
 
 p{
     font-size: 20px;
+    padding:0px 15px 0px 15px;
     color: rgb(28, 7, 91);
        /* font-size: 100%;*/
 }
-
+.justify{
+    text-align: justify;
+}
 h1{
     font-weight: 300;
 }
@@ -149,13 +163,23 @@ h1{
     height: 100%;
   }
 
+@media screen and (min-width: 1700px) {
+    .wrapper-body{
+        width: 50%;
+    }
+}
   @media screen and (max-width: 900px) {/* スクリーンサイズが1199px以下の場合に適用 */
    .title{
+       text-align: center;
     padding:10px 3px 0px 3px;
 
    }
     .wrapper-body{
         width: 95%;
+    }
+    .normal-text{
+        padding-left: 5%;
+        padding-right: 5%;
     }
     .youtube{
         position: relative;
