@@ -39,6 +39,9 @@ span{
 .nextp-image{
     width: 80%;
 }
+.news-image{
+    width: 50%;
+}
 .top-bar-front{
     height: 2px;
     background-color: seagreen;
