@@ -109,3 +109,15 @@ themediagrid.com, SWH94X, RESELLER, 35d5010d7789b49d
 yandex.com, 97539269, RESELLER
 meitu.com, 699, RESELLER
 openx.com, 540866936, RESELLER, 6a698e2ec38604c6
+videoheroes.tv, 212499, RESELLER, 064bc410192443d8
+Pubmatic.com, 157800, RESELLER, 5d62403b186f2ace
+Pubmatic.com, 158118, RESELLER, 5d62403b186f2ace
+Pubmatic.com, 161018, RESELLER, 5d62403b186f2ace
+Pubmatic.com, 161344, RESELLER, 5d62403b186f2ace
+smartadserver.com, 3964, RESELLER
+rhythmone.com, 170071695, RESELLER, a670c89d4a324e47
+video.unrulymedia.com, 170071695, RESELLER, a670c89d4a324e47
+appnexus.com, 12976, RESELLER, f5ab79cb980f11d1
+sonobi.com, ac6f1a9ded, RESELLER, d1a215d9eb5aee9e
+indexexchange.com, 194974, RESELLER, 50b1c356f2c5c8fc
+Se7en.es, 212499, RESELLER, 064bc410192443d8
