@@ -131,3 +131,5 @@ smartadserver.com, 3964, RESELLER
 rhythmone.com, 170071695, RESELLER, a670c89d4a324e47
 video.unrulymedia.com, 170071695, RESELLER, a670c89d4a324e47
 appnexus.com, 12976, RESELLER, f5ab79cb980f11d1
+advlion.com, 5140, RESELLER
+opera.com, pub6794361378752, RESELLER, 55a0c5fd61378de3
