@@ -6,13 +6,40 @@
     <script>
         // ページがロードされたときに実行される関数
         window.onload = function () {
-            // サーバーから取得したランダムな整数を表示
-            fetch('http://localhost:3000')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById("randomNumberDisplay").innerText = data;
-                })
-                .catch(error => console.error('Error:', error));
+            // クッキーからランダムな整数を取得
+            var randomNumber = getCookie("randomNumber");
+
+            // クッキーにランダムな整数が保存されていない場合は新しく生成
+            if (!randomNumber) {
+                randomNumber = Math.floor(Math.random() * 10) + 1;
+                setCookie("randomNumber", randomNumber, 365); // 365日間クッキーを保持
+            }
+
+            // 生成または取得したランダムな整数を表示
+            document.getElementById("randomNumberDisplay").innerText = "Random Number: " + randomNumber;
+        }
+
+        // クッキーを設定する関数
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        // クッキーから値を取得する関数
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
         }
     </script>
 
@@ -26,6 +53,6 @@
  <br>
 
  <a>ランダムに数字生成しているだけなので偏りあるかも</a><br>
- <a>臨機応変に人数調整してくれると嬉しいです3</a>
+ <a>臨機応変に人数調整してくれると嬉しいですc</a>
 </body>
 </html>
