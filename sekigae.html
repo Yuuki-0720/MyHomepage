@@ -24,9 +24,25 @@
 <body>
     <marquee><h1>席替えしますよー＼(^o^)／</h1></marquee>
     <br>
+
+    <script>
+        // ページがロードされたときに実行される関数
+        window.onload = function () {
+            // サーバーから取得したランダムな整数を表示
+            fetch('http://localhost:3000')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("randomNumberDisplay").innerText = data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+
  <h1 id="randomNumberDisplay"></h1>
  <br>
+
  <a>ランダムに数字生成しているだけなので偏りあるかも</a><br>
- <a>臨機応変に人数調整してくれると嬉しいです</a>
+ <a>臨機応変に人数調整してくれると嬉しいです2</a>
 </body>
 </html>
