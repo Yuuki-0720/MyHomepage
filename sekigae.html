@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // ページがロードされたときに実行される関数
+        window.onload = function () {
+            // ローカルストレージからランダムな整数を取得
+            var randomNumber = localStorage.getItem("randomNumber");
+
+            // ローカルストレージにランダムな整数が保存されていない場合は新しく生成
+            if (!randomNumber) {
+                randomNumber = Math.floor(Math.random() * 10) + 1;
+                localStorage.setItem("randomNumber", randomNumber);
+            }
+
+            // 生成または取得したランダムな整数を表示
+            document.getElementById("randomNumberDisplay").innerText = "テーブル番号: " + randomNumber;
+        }
+      </script>
+    <title>Document</title>
+</head>
+<body>
+    <marquee><h1>席替えしますよー＼(^o^)／</h1></marquee>
+    <br>
+ <h1 id="randomNumberDisplay"></h1>
+ <br>
+ <a>ランダムに数字生成しているだけなので偏りあるかも</a><br>
+ <a>臨機応変に人数調整してくれると嬉しいです</a>
+</body>
+</html>
