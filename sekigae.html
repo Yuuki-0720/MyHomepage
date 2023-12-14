@@ -7,16 +7,16 @@
         // ページがロードされたときに実行される関数
         window.onload = function () {
             // クッキーからランダムな整数を取得
-            var randomNumber = getCookie("randomNumber");
+            var randomNumber = getCookie("randomNumber2");
 
             // クッキーにランダムな整数が保存されていない場合は新しく生成
             if (!randomNumber) {
-                randomNumber = Math.floor(Math.random() * 10) + 1;
-                setCookie("randomNumber", randomNumber, 365); // 365日間クッキーを保持
+                randomNumber = Math.floor(Math.random() * 7) + 1;
+                setCookie("randomNumber2", randomNumber, 365); // 365日間クッキーを保持
             }
 
             // 生成または取得したランダムな整数を表示
-            document.getElementById("randomNumberDisplay").innerText = "テーブル番号: " + randomNumber;
+            document.getElementById("randomNumberDisplay2").innerText = "テーブル番号: " + randomNumber;
         }
 
         // クッキーを設定する関数
@@ -49,9 +49,13 @@
     <marquee><h1>席替えしますよー＼(^o^)／</h1></marquee>
     <br>
 
- <h1 id="randomNumberDisplay"></h1>
+ <h1 id="randomNumberDisplay2"></h1>
  <br>
 
- <a>ランダムに数字生成しているだけなので偏りあるかも。臨機応変に人数調整してくれると嬉しいです。</a>
+ <a>ランダムに数字生成しているだけなので偏りある可能性大です。臨機応変に人数調整してくれると嬉しいです。</a>
+ <br>
+ <br>
+ <br>
+ <img src="./seki.png" width="80%" height="80%" alt="画像の説明">
 </body>
 </html>
