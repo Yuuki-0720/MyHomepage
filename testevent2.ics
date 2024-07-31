@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Your Organization//Your Product//EN
+BEGIN:VEVENT
+UID:uid2@example.com
+DTSTAMP:20240731T000000Z
+SUMMARY:MTG直前アイデア出し追い込み
+DTSTART:20240801T030000Z
+DTEND:20240801T040000Z
+LOCATION:山王パークタワー
+DESCRIPTION:◆サブタスク◆\n・先週の宿題事項再確認\n・資料アップデート\n・予備案の考案\n\n◆AI提案◆\nカフェでアイデア出しするのはいかがですか？\nhttps://www.sugotoku.docomo.ne.jp/cs/toku/index.html?type=top&categoryId=01&prefecturesCd=00&sort=1&page=1\n\n※スゴ得コンテンツのクーポンやアプリを事前に入れておき\nジャンルを判定して表示→タップ数で利用見込みを出す方法\n外部のベクトルDB等たいそうなものでなく配列変数に事前に仕組まれてるレベルを想定\n\n※標準DBに格納して外部アプリで修正されたとしても、メモ欄をこんなに入力しない人いないから一定メモタスクAIとの入力はわかりそう？ メモ欄ならサーバにも共有されるはず
+END:VEVENT
+END:VCALENDAR
