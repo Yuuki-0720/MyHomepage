@@ -5,8 +5,8 @@ BEGIN:VEVENT
 UID:uid1@example.com
 DTSTAMP:20240731T000000Z
 SUMMARY:プレミアムフライデー
-DTSTART:20240802T060000Z
-DTEND:20240802T140000Z
+DTSTART:20240816T060000Z
+DTEND:20240816T140000Z
 LOCATION:NTTドコモ代々木ビル
 DESCRIPTION:◆サブタスク◆\n・本日中入稿内容の確認\n・週明けの仕事の整理\n・地下のコンビニで飲み物買う\n\n◆参考 アプリ起動URLスキーム◆\nmaps.apple.com/?address=NTTドコモ代々木ビル
 END:VEVENT
