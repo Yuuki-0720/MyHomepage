@@ -35,6 +35,10 @@ span{
     vertical-align: top;
     width: 100%;
 }
+.header-image-special{
+    vertical-align: top;
+    width: 100%;
+}
 
 .nextp-image{
     width: 90%;
@@ -84,7 +88,7 @@ span{
 }
 .bar-ul li{
     list-style: none;
-    padding:5px 0px 5px 10px;
+    padding:0.3% 10px 0.3% 0px;
     font-size:20px;
 }
 
@@ -96,15 +100,11 @@ span{
 }
 .wrapper-body{
     width: 70%;
-    padding: 0px 2% 0px 2%;
+    padding: 0px  2% 0px;
     margin: auto;
     background-color: rgb(241, 254, 255);
 }
-.normal-text{
-    padding-left: 20%;
-    padding-right: 20%;
-    text-align: left;
-}
+
 .lastupdate{
     font-size: 14px;
     text-align: center;
@@ -147,7 +147,7 @@ footer{
 .title{
     padding:20px 5px 0px 15px;
     font-size: 40px;
-    font-weight: 400;
+    font-weight: 600;
     text-align: center;
     color: rgb(28, 7, 91);
    /* font-size:200%;*/
@@ -162,12 +162,15 @@ footer{
 }
 p{
     font-size: 20px;
-    padding:0px 15px 0px 15px;
     color: rgb(28, 7, 91);
+    margin: 0% 3% 0%;
        /* font-size: 100%;*/
 }
 .justify{
     text-align: justify;
+}
+.left{
+    text-align: left;
 }
 h1{
     font-weight: 300;
@@ -223,12 +226,9 @@ width: 70%;
     padding:10px 3px 0px 3px;
 
    }
+
     .wrapper-body{
         width: 95%;
-    }
-    .normal-text{
-        padding-left: 5%;
-        padding-right: 5%;
     }
 
     .youtube{
@@ -241,7 +241,7 @@ width: 70%;
         }
 }
 @media screen and (max-width: 480px) {
-
+/* 共通 */
     .header-image{
         width: 100%;         /* 親要素の幅に合わせる */
         height: 100px;       /* 高さ100pxを維持 */
@@ -249,11 +249,33 @@ width: 70%;
         object-position: center;
     }
 
+
     .title{
         font-size: 24px;
+        padding:20px 0px 0px 0px;
     }
     p{
      font-size: 16px;   
     }
+
+    /* ページ個別*/
+    .header-image-special{
+        width: 100%;         /* 親要素の幅に合わせる */
+        height: 170px;       /* 高さ100pxを維持 */
+        object-fit: cover;   /* 画像を引き伸ばさずに中央を表示 */
+        object-position: center;
+    }
+
+    .top-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    .bar-ul {
+        margin: 1.5% 5% 1.5% 5%;
+        overflow-x: auto;
+        flex-flow: row;
+        display: flex; /* 横並びにする */
+        justify-content: flex-start; /* 左寄せにする */
+        }
 
 }
