@@ -42,9 +42,9 @@ span{
 .video-container {
     position: relative;
     width: 87%; /* 幅を87%に設定 */
-    max-width: 900px; /* 最大幅を900pxに設定（任意） */
+    max-width: 100%; /* 最大幅を900pxに設定（任意） */
     margin: auto;
-    padding-top: 49%; /* 16:9のアスペクト比に調整 */
+    padding-top: 48.93%; /* 16:9のアスペクト比に調整 */
 }
 .nextp-youtube {
     position: absolute;
@@ -191,12 +191,33 @@ h1{
 width: 70%;
 }
 
+
+.sp-br {
+    display:none;
+}
+
+
+@media screen and (max-width: 480px) {
+.sp-br {
+    display:block;
+}
+
+}
+
+
 @media screen and (min-width: 1700px) {
+    .sp-br {
+        display:none;
+    }
+
     .wrapper-body{
         width: 50%;
     }
 }
   @media screen and (max-width: 900px) {/* スクリーンサイズが1199px以下の場合に適用 */
+    
+
+
    .title{
        text-align: center;
     padding:10px 3px 0px 3px;
@@ -218,4 +239,21 @@ width: 70%;
     .indexContentsImage{
         width: 100%;
         }
+}
+@media screen and (max-width: 480px) {
+
+    .header-image{
+        width: 100%;         /* 親要素の幅に合わせる */
+        height: 100px;       /* 高さ100pxを維持 */
+        object-fit: cover;   /* 画像を引き伸ばさずに中央を表示 */
+        object-position: center;
+    }
+
+    .title{
+        font-size: 24px;
+    }
+    p{
+     font-size: 16px;   
+    }
+
 }
