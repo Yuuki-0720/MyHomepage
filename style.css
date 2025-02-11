@@ -199,6 +199,55 @@ width: 70%;
     display:none;
 }
 
+/* SNSbutton*/
+.sns-box {
+    display: flex;
+    align-items: center;  /* ボタンを中央寄せ */
+    flex-direction: column;
+    border-radius: .2rem;
+    }
+    
+    .btn-sns {
+    width: 3.8rem;
+    height: 3.8rem;
+    padding-top: 1rem;
+    box-sizing: border-box;
+    color: white;
+    font-size: 1.2rem;
+    text-align: center;
+    text-decoration: none;
+    line-height: 1;
+    }
+    
+    .btn-sns svg {
+    fill: #fff
+    }
+    
+    .btn-sns div {
+    margin-top: .5rem;
+    font-size: .5rem;
+    }
+    
+    .btn-sns:hover svg {
+    transform: rotateY(360deg);
+    transition: .5s;
+    }
+    
+    .btn-x {
+    background-color: #111319;
+    }
+    
+    .btn-facebook {
+    background-color: #375A94;
+    }
+    
+    .btn-line {
+    background-color: #5DB40F;
+    }
+    
+    .btn-pinterest {
+    background-color: #B83026;
+    }
 
 @media screen and (max-width: 480px) {
 .sp-br {
