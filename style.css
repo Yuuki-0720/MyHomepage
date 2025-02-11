@@ -261,7 +261,7 @@ width: 70%;
     /* ページ個別*/
     .header-image-special{
         width: 100%;         /* 親要素の幅に合わせる */
-        height: 170px;       /* 高さ100pxを維持 */
+        height: 180px;       /* 高さ100pxを維持 */
         object-fit: cover;   /* 画像を引き伸ばさずに中央を表示 */
         object-position: center;
     }
