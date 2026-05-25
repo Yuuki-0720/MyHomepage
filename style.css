@@ -166,6 +166,29 @@ p{
     margin: 0% 3% 0%;
        /* font-size: 100%;*/
 }
+.legal-text{
+    text-align: left;
+    color: rgb(28, 7, 91);
+    padding: 0 3% 32px;
+}
+.legal-text p,
+.legal-text li{
+    font-size: 18px;
+    line-height: 1.7;
+    margin: 0.7em 0;
+}
+.legal-text ul{
+    margin: 0.4em 0 1em 1.5em;
+}
+.legal-text h2{
+    font-size: 24px;
+    font-weight: 600;
+    margin: 1.4em 0 0.5em;
+    color: rgb(28, 7, 91);
+}
+.legal-text a{
+    color: rgb(19, 119, 121);
+}
 .justify{
     text-align: justify;
 }
@@ -305,6 +328,13 @@ width: 70%;
     }
     p{
      font-size: 16px;   
+    }
+    .legal-text p,
+    .legal-text li{
+        font-size: 15px;
+    }
+    .legal-text h2{
+        font-size: 20px;
     }
 
     /* ページ個別*/
