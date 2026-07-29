@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>クラリィのぷくぷくシャボン玉はこび Ver1.3.0 仕様書</title>
+  <style>
+    :root {
+      --ink: #123b52;
+      --muted: #5b7d8e;
+      --paper: #ffffff;
+      --soft: #eefcff;
+      --soft-2: #f8fdff;
+      --line: #b8e9f5;
+      --cyan: #74d7ed;
+      --cyan-2: #c8f5ff;
+      --blue: #278cc3;
+      --deep: #0a5b82;
+      --pink: #f5aac8;
+      --coral: #ffb48f;
+      --gold: #ffd86d;
+      --green: #7bd7b7;
+      --violet: #adb9ff;
+      --night: #203b72;
+      --shadow: 0 18px 46px rgba(22, 120, 168, 0.14);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: #ddf8ff; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Yu Gothic UI", "Meiryo", sans-serif;
+      line-height: 1.72;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 8% 5%, rgba(255,255,255,0.96) 0 7px, transparent 8px),
+        radial-gradient(circle at 87% 8%, rgba(255,255,255,0.78) 0 13px, transparent 14px),
+        radial-gradient(circle at 75% 25%, rgba(255,255,255,0.62) 0 6px, transparent 7px),
+        linear-gradient(180deg, #d8f7ff 0%, #f7fdff 38%, #ffffff 100%);
+    }
+
+    a { color: var(--deep); text-decoration-color: rgba(10,91,130,0.32); }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.93em;
+      color: #0d5a7b;
+      background: rgba(215,245,252,0.68);
+      padding: 1px 5px;
+      border-radius: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 78px;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.06fr) minmax(300px, 0.94fr);
+      gap: 28px;
+      min-height: 650px;
+      padding: 34px;
+      border: 1px solid rgba(255,255,255,0.94);
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.94), rgba(232,250,255,0.82)),
+        linear-gradient(180deg, rgba(98,205,235,0.16), rgba(255,255,255,0));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after,
+    .bubble-dot {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(95,202,233,0.35);
+      background: radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(182,238,250,0.24) 58%, rgba(255,255,255,0));
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before { width: 190px; height: 190px; right: -46px; top: -58px; }
+    .hero::after { width: 96px; height: 96px; left: 48%; bottom: 36px; }
+    .bubble-dot { width: 54px; height: 54px; left: 38px; top: 40px; opacity: 0.7; }
+
+    .hero-copy {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .logo {
+      width: min(460px, 92%);
+      height: auto;
+      filter: drop-shadow(0 14px 22px rgba(12,107,155,0.17));
+    }
+
+    .eyebrow,
+    .pill,
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(114,215,238,0.42);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      color: #23586e;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .eyebrow { padding: 7px 14px; font-size: 13px; }
+    .pill { padding: 8px 12px; font-size: 13px; }
+    .tag { padding: 5px 10px; font-size: 12px; background: var(--soft); }
+    .tag.new { background: #e9f9ff; border-color: #85dff2; color: #096188; }
+    .tag.warn { background: #fff8df; border-color: #ffe39a; color: #846100; }
+    .tag.good { background: #e9f8f0; border-color: #9de5c1; color: #24633d; }
+    .tag.night { background: #edf0ff; border-color: #bdc8ff; color: #30457c; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 6vw, 66px);
+      line-height: 1.07;
+      letter-spacing: 0;
+      color: var(--deep);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(26px, 3vw, 36px);
+      line-height: 1.22;
+      color: var(--deep);
+      letter-spacing: 0;
+    }
+
+    h3 { margin: 26px 0 12px; font-size: 21px; color: #145f83; letter-spacing: 0; }
+    h4 { margin: 18px 0 8px; font-size: 16px; color: #245d73; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin-top: 8px; padding-left: 1.35em; }
+    li { margin: 5px 0; }
+
+    .lead {
+      max-width: 690px;
+      margin: 0;
+      font-size: 18px;
+      color: #315f73;
+    }
+
+    .hero-meta,
+    .tag-row,
+    .mini-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .phone-stack {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      min-height: 560px;
+    }
+
+    .phone-frame {
+      position: relative;
+      width: min(315px, 80vw);
+      border-radius: 38px;
+      padding: 10px;
+      background: linear-gradient(145deg, #ffffff, #d5f4ff);
+      box-shadow: 0 28px 60px rgba(15,96,134,0.25);
+      transform: rotate(2deg);
+    }
+
+    .phone-frame::after {
+      content: "ver 1.3.0";
+      position: absolute;
+      right: 28px;
+      top: 30px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(236,251,255,0.9);
+      color: #155e80;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(15,96,134,0.12);
+    }
+
+    .phone-frame img {
+      width: 100%;
+      display: block;
+      border-radius: 30px;
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .jelly-badge {
+      position: absolute;
+      left: -18px;
+      bottom: 76px;
+      width: 96px;
+      height: 96px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid rgba(141,223,242,0.72);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 16px 34px rgba(15,96,134,0.18);
+      transform: rotate(-8deg);
+    }
+
+    .jelly-badge img { width: 66px; height: 66px; object-fit: contain; }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      margin: 18px 0 44px;
+      padding: 14px;
+      border: 1px solid rgba(138,218,237,0.72);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.84);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 12px 30px rgba(22,120,168,0.10);
+    }
+
+    .toc a {
+      display: inline-flex;
+      margin: 4px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: #23586e;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .toc a:hover { background: var(--soft); }
+    section { margin: 58px 0; }
+
+    .section-lead {
+      max-width: 880px;
+      color: #315f73;
+      font-size: 16px;
+    }
+
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+
+    .card,
+    .panel,
+    .shot-card,
+    .mode-card,
+    .feature-card,
+    .fish-card,
+    .doc-link {
+      border: 1px solid rgba(146,222,238,0.78);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.86);
+      box-shadow: 0 12px 30px rgba(22,120,168,0.10);
+    }
+
+    .card, .panel { padding: 20px; }
+    .card h3:first-child, .card h4:first-child, .panel h3:first-child, .panel h4:first-child { margin-top: 0; }
+    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(240,252,255,0.92)); }
+    .panel.warn { border-color: #ffe1a1; background: #fffaf0; }
+    .panel.good { border-color: #a8e4c8; background: #f0fff8; }
+    .panel.night { border-color: #c8d1ff; background: #f4f6ff; }
+
+    .shot-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .shot-card {
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .shot-card img {
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      display: block;
+      object-fit: cover;
+      object-position: top center;
+      background: var(--soft);
+    }
+
+    .shot-card strong {
+      display: block;
+      padding: 12px 13px 0;
+      color: #145f83;
+    }
+
+    .shot-card p {
+      min-height: 52px;
+      margin: 0;
+      padding: 3px 13px 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .mode-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .mode-card { position: relative; overflow: hidden; padding: 22px; min-height: 280px; }
+    .mode-card::after {
+      content: "";
+      position: absolute;
+      right: -52px;
+      bottom: -54px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(171,234,248,0.24), transparent 70%);
+    }
+    .mode-card img { width: 82px; height: 82px; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(13,88,124,0.16)); }
+    .mode-card h3 { margin-top: 16px; }
+    .mode-normal { border-top: 5px solid var(--cyan); }
+    .mode-time { border-top: 5px solid var(--violet); }
+    .mode-center { border-top: 5px solid var(--coral); }
+
+    .feature-card {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 14px;
+      align-items: start;
+      padding: 18px;
+    }
+
+    .feature-card h3 { margin: 0 0 5px; font-size: 18px; }
+    .feature-card p { margin: 0; color: #466d7f; font-size: 14px; }
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #8bdff0, #55b9d7);
+      border: 1px solid #45abc9;
+      box-shadow: 0 8px 18px rgba(39,140,195,0.18), inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+    .feature-icon img { width: 38px; height: 38px; object-fit: contain; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(22,120,168,0.09);
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    th, td { padding: 12px 13px; border: 1px solid #d4f0f7; vertical-align: top; text-align: left; }
+    th { background: #e8faff; color: #155e80; }
+    tbody tr:nth-child(even) td { background: #f8fdff; }
+
+    .spec-list {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 0;
+      overflow: hidden;
+      border: 1px solid #d4f0f7;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(22,120,168,0.09);
+    }
+    .spec-list dt, .spec-list dd { margin: 0; padding: 13px 15px; border-bottom: 1px solid #d4f0f7; }
+    .spec-list dt { background: #eafaff; font-weight: 900; color: #155e80; }
+    .spec-list dd { color: #315f73; }
+    .spec-list dt:last-of-type, .spec-list dd:last-of-type { border-bottom: none; }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin: 16px 0;
+    }
+    .flow .step {
+      padding: 10px 13px;
+      border: 1px solid #b9e9f5;
+      border-radius: 14px;
+      background: #f6fdff;
+      color: #145f83;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .flow .arrow { color: var(--blue); font-weight: 900; }
+
+    .codebox {
+      margin: 16px 0;
+      padding: 18px;
+      border-radius: 20px;
+      background: #0f3448;
+      color: #e8fbff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.65;
+      overflow-x: auto;
+      box-shadow: 0 14px 34px rgba(12,70,100,0.20);
+      white-space: pre;
+    }
+
+    .note {
+      padding: 12px 14px;
+      border-left: 4px solid var(--cyan);
+      border-radius: 12px;
+      background: #f5fdff;
+      color: #416a7d;
+      font-size: 14px;
+    }
+
+    .time-band {
+      display: grid;
+      grid-template-columns: 1.05fr .45fr 2.4fr .75fr .6fr 1.25fr;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(146,222,238,0.78);
+      box-shadow: 0 12px 30px rgba(22,120,168,0.10);
+      margin: 18px 0;
+      min-height: 82px;
+    }
+    .time-seg {
+      display: grid;
+      place-items: center;
+      padding: 12px 8px;
+      text-align: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .time-night { background: linear-gradient(180deg, #1d3570, #142653); }
+    .time-dawn { background: linear-gradient(180deg, #d8f5ff, #ffc5c9); color: #245d73; }
+    .time-day { background: linear-gradient(180deg, #89e2f5, #ecfbff); color: #0a5b82; }
+    .time-gold { background: linear-gradient(180deg, #ffdf78, #ffba8c); color: #6b5000; }
+    .time-sunset { background: linear-gradient(180deg, #ff9ca9, #aab7ff); color: #5d315c; }
+
+    .mini-tabs {
+      padding: 12px;
+      border-radius: 18px;
+      background: #f7fdff;
+      border: 1px solid #d4f0f7;
+      width: fit-content;
+      max-width: 100%;
+    }
+    .mini-tabs span {
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #cdeef7;
+      color: #155e80;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .mini-tabs span.selected {
+      color: #fff;
+      background: linear-gradient(135deg, #41bce0, #267fb9);
+      border-color: transparent;
+    }
+
+    .fish-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .fish-card {
+      padding: 14px;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff, #f5fdff);
+    }
+    .fish-card img {
+      width: 100%;
+      height: 78px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 14px rgba(12,91,130,0.15));
+    }
+    .fish-card h4 { margin: 10px 0 4px; }
+    .fish-card p { margin: 0; color: var(--muted); font-size: 12px; }
+
+    .script-map {
+      display: grid;
+      gap: 12px;
+    }
+    .script-row {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid #d4f0f7;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(22,120,168,0.07);
+    }
+    .script-row strong { color: #155e80; }
+
+    .doc-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .doc-link {
+      display: block;
+      padding: 17px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .doc-link strong { display: block; color: var(--deep); margin-bottom: 4px; }
+    .doc-link span { color: var(--muted); font-size: 13px; }
+
+    .footer {
+      margin-top: 70px;
+      padding: 26px;
+      text-align: center;
+      color: #4d7587;
+      border: 1px solid rgba(146,222,238,0.78);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.76);
+    }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .phone-stack { min-height: 420px; }
+      .shot-grid, .fish-grid, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid-3 { grid-template-columns: 1fr; }
+      .mode-grid { grid-template-columns: 1fr; }
+      .doc-links { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100% - 20px, 1180px); padding-top: 14px; }
+      .hero { padding: 22px; min-height: auto; border-radius: 26px; }
+      .grid, .shot-grid, .fish-grid, .grid-4 { grid-template-columns: 1fr; }
+      .feature-card, .script-row, .spec-list { grid-template-columns: 1fr; }
+      table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      th, td { min-width: 122px; }
+      .codebox {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .pill, .tag, .eyebrow { white-space: normal; }
+      .time-band { grid-template-columns: 1fr; }
+      .toc { position: relative; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <span class="bubble-dot"></span>
+      <div class="hero-copy">
+        <img class="logo" src="BubbleSiteAssets/logo_jp_current.png" alt="クラリィのぷくぷくシャボン玉はこび ロゴ">
+        <span class="eyebrow">Release Specification / Ver1.3.0</span>
+        <h1>クラリィのぷくぷくシャボン玉はこび 仕様書</h1>
+        <p class="lead">
+          Ver1.3.0 は、シャボン玉を弾くプレイ快感と、眺めて落ち着ける水中体験をさらに強めたリリースです。
+          追加された海の24時間サイクル、設定/ポーズからの時間帯切替、クラゲコンパニオンを中心に、ゲーム仕様・技術仕様・スクリプト構成・ログをまとめます。
+        </p>
+        <div class="hero-meta">
+          <span class="pill">Unity 6000.3.10f1 / URP</span>
+          <span class="pill">UI Toolkit</span>
+          <span class="pill">iOS / Android</span>
+          <span class="pill">bundleVersion 1.3</span>
+        </div>
+        <div class="tag-row">
+          <span class="tag new">New: Ocean 24h Cycle</span>
+          <span class="tag new">New: Jellyfish Companion</span>
+          <span class="tag good">Clock / Pomodoro / Timer</span>
+          <span class="tag night">PlayFab Ranking</span>
+        </div>
+      </div>
+      <div class="phone-stack">
+        <div class="phone-frame">
+          <img src="BubbleSiteAssets/title.jpg" alt="タイトル画面">
+        </div>
+        <div class="jelly-badge">
+          <img src="BubbleSiteAssets/jellyicon.png" alt="クラゲアイコン">
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="目次">
+      <a href="#summary">概要</a>
+      <a href="#release">v1.3 差分</a>
+      <a href="#screens">画面</a>
+      <a href="#modes">モード</a>
+      <a href="#bubble-logic">Bubble</a>
+      <a href="#ocean-cycle">海の時間帯</a>
+      <a href="#jellyfish">クラゲ</a>
+      <a href="#features">機能一覧</a>
+      <a href="#fish-species">魚図鑑</a>
+      <a href="#seashells">貝がら / 衣装</a>
+      <a href="#technical">技術仕様</a>
+      <a href="#scripts">スクリプト</a>
+      <a href="#logs">ログ</a>
+      <a href="#appendix-docs">Appendix</a>
+    </nav>
+
+    <section id="summary">
+      <h2>ゲーム概要</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>基本体験</h3>
+          <p>
+            プレイヤーはクラリィを操作し、頭の判定エリアでシャボン玉を弾いてスコアや距離を伸ばします。
+            操作はシンプルですが、ヒット音、破裂音、端末振動、Bubbleのぷにょ変形、海中演出により「触って気持ちいい」反応を重ねています。
+          </p>
+          <ul>
+            <li>頭の中心に近いほど高得点・高精度。</li>
+            <li>Normal / Time Attack / Center Hit の3モード。</li>
+            <li>落下・時間切れ・規定ヒットでリザルトへ遷移。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>作業用体験</h3>
+          <p>
+            Clock Mode / Pomodoro / Timer は、海中の美しさとクラリィのかわいい動きを活かした「眺めるゲーム」機能です。
+            Ver1.3では海の時間帯を実時刻や好みに合わせられるため、勉強・作業・休憩の背景としての価値が強まりました。
+          </p>
+          <ul>
+            <li>タイトルは実時刻・季節に連動する海を表示可能。</li>
+            <li>ゲーム中もポーズから昼/夕焼け/日没/夜へ即時切替。</li>
+            <li>クラゲコンパニオンが長時間滞在時の癒やし要素になる。</li>
+            <li>仕様書のTitle代表画面は昼を基調にし、夕方・夜は海時間サイクルの差分として紹介。</li>
+          </ul>
+        </div>
+      </div>
+      <dl class="spec-list">
+        <dt>正式名称</dt><dd>クラリィのぷくぷくシャボン玉はこび / Bubble Pop</dd>
+        <dt>ジャンル</dt><dd>海中カジュアルアクション、チル作業用ゲーム、時計/ポモドーロ/タイマー補助</dd>
+        <dt>対象端末</dt><dd>iOS / Android。Android Min SDK 33。</dd>
+        <dt>現行バージョン</dt><dd><code>bundleVersion: 1.3</code> / iOS <code>1.3.0</code> / Android versionCode <code>103</code></dd>
+        <dt>主な実装方針</dt><dd>Unity Input System、UI Toolkit、URP、イベント駆動、PlayFabランキング、モバイル触覚フィードバック。</dd>
+      </dl>
+    </section>
+
+    <section id="release">
+      <h2>Ver1.3.0 リリース差分</h2>
+      <p class="section-lead">
+        Ver1.3.0 の中心は「時間で表情を変える海」と「クラリィのそばに集まるクラゲ」です。
+        既存のゲームモードやストア/ランキング機能は維持し、タイトル・設定・ポーズ・水中演出の体験密度を上げています。
+      </p>
+      <table>
+        <thead><tr><th>区分</th><th>内容</th><th>主な実装</th></tr></thead>
+        <tbody>
+          <tr><td>新規</td><td>24時間の海中時間帯サイクル。Day / Dawn / GoldenSunset / Sunset / Night を日の出・日の入り相対で補間。</td><td><code>OceanTimeOfDayCycle</code> / <code>OceanTimeOfDayProfile</code></td></tr>
+          <tr><td>新規</td><td>タイトルは端末の実時刻と日付に連動。愛媛県伊予市/松山相当の夏至・冬至モデルで日の出/日の入りを近似。</td><td><code>ResolveHour()</code> / <code>ResolveSeasonT()</code></td></tr>
+          <tr><td>新規</td><td>設定画面・ポーズ画面に「現実 / 日中 / 夕焼け / 日没 / 夜」の海時間タブを追加。</td><td><code>SettingsController</code> / <code>PauseController</code></td></tr>
+          <tr><td>新規</td><td>海の時間帯をシーン別に保存。タイトル、Normal、TimeAttack、CenterHit で独立スロットを持つ。</td><td><code>GameSettingsStore</code> / <code>GameModeInfo</code></td></tr>
+          <tr><td>新規</td><td>ゲーム3シーンへ OceanTimeOfDayCycle を実行時に自動付与。シーンへの手動配置漏れを防ぐ。</td><td><code>OceanCycleBootstrap</code></td></tr>
+          <tr><td>新規</td><td>クラゲコンパニオン。画面外から登場し、クラリィ/プレイヤーの周囲に定着して漂う。</td><td><code>JellyfishCompanion</code> / <code>JellyfishCompanionManager</code></td></tr>
+          <tr><td>新規</td><td>クラゲ用アニメ付きFBX、Animator Controller、半透明URPマテリアル、セットアップEditorツール。</td><td><code>JellyfishCompanionSetup</code> / <code>Jellyfish.mat</code></td></tr>
+          <tr><td>更新</td><td>時間帯Profileに Dawn を追加。Profile共有時に地形高さでカースティクスがずれないよう配置適用フラグを追加。</td><td><code>OceanTimeOfDay.Dawn</code> / <code>applyCausticsPlacement</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="screens">
+      <h2>画面・素材ギャラリー</h2>
+      <p class="section-lead">
+        Ver1.3の実機画面を反映した縦画面の代表ギャラリーです。Titleは昼の画面を主役にし、
+        夕方・夜は海時間サイクルのバリエーションとして扱います。3モード選択、Clock / Pomodoro / Timer、
+        衣装クローゼット、海時間タブ付き設定、ゲーム中のHUD、結果、ランキング、ストアを確認できます。
+      </p>
+      <div class="shot-grid">
+        <div class="shot-card"><img src="BubbleSiteAssets/title.jpg" alt="タイトル画面"><strong>Title</strong><p>ver 1.3.0表示、クラリィ、時計/設定/クローゼット/ランキング/ストアへのホーム。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/clock.jpg" alt="時計・ポモドーロ・タイマー"><strong>Clock / Pomodoro / Timer</strong><p>時計、ポモドーロ、タイマーを切り替える作業用モード。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/closet.jpg" alt="衣装クローゼット"><strong>Closet</strong><p>貝がら残高と衣装カードを表示し、クラリィの衣装を切り替え。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/ranking.png" alt="ランキング"><strong>Ranking</strong><p>距離ランキングと自分の順位を表示。実機ではPlayFab名簿を確認。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/mode_select.jpg" alt="ゲームモード選択"><strong>Mode Select</strong><p>Normal、どまんなか、タイムアタックの3モードをタイトル下部から選択。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/gameplay.jpg" alt="Normalゲームプレイ"><strong>Normal</strong><p>ゲームシーンでBubbleを弾く通常プレイ。バブル、クラリィ、距離、ヒット数、貝がらHUDを表示。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/burst_play.jpg" alt="Center Hitゲームプレイ"><strong>Center Hit</strong><p>15回制の中心ヒット。命中率、スコア、ヒット回数を表示。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/time_attack.jpg" alt="Time Attackゲームプレイ"><strong>Time Attack</strong><p>60秒制の距離チャレンジ。タイマー、距離、夜の海時間HUDを表示。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/result.jpg" alt="リザルト"><strong>Result</strong><p>距離、スコア、平均、拾った貝がら、復活/再試行/シェア導線。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/settings.jpg" alt="設定"><strong>Settings</strong><p>BGM/SE/振動、ユーザー情報、問い合わせ、海時間タブを管理。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/store_remove_ads.jpg" alt="ストア"><strong>Store</strong><p>ゲーム内/ストア課金タブ、広告削除・衣装購入・購入復元。</p></div>
+      </div>
+    </section>
+
+    <section id="modes">
+      <h2>ゲームモード</h2>
+      <div class="mode-grid">
+        <div class="mode-card mode-normal">
+          <img src="BubbleSiteAssets/mode_normal.png" alt="Normal icon">
+          <h3>Normal Endless</h3>
+          <p>Bubbleを落とすまで続く基本モード。距離、ヒット回数、命中率、スコアを伸ばす。海時間の既定は <strong>日中</strong>。</p>
+          <ul>
+            <li>スコア、総移動距離、最大/平均精度を記録。</li>
+            <li>同じ位置での放置連続ヒットはコンボガードで抑制。</li>
+            <li>落下/破裂でリザルトへ移行。</li>
+          </ul>
+        </div>
+        <div class="mode-card mode-time">
+          <img src="BubbleSiteAssets/mode_timeattack.png" alt="Time Attack icon">
+          <h3>Time Attack</h3>
+          <p>60秒でどれだけ距離とスコアを伸ばせるかを競う短時間モード。海時間の既定は <strong>夜</strong>。</p>
+          <ul>
+            <li>時間切れまたは落下で終了。</li>
+            <li>テンポ重視。ランキング/シェアとの相性が高い。</li>
+            <li>ポーズ画面から海時間を即時変更可能。</li>
+          </ul>
+        </div>
+        <div class="mode-card mode-center">
+          <img src="BubbleSiteAssets/mode_centerhit.png" alt="Center Hit icon">
+          <h3>Center Hit</h3>
+          <p>15回のヘディングで中心精度を競う採点モード。海時間の既定は <strong>夕焼け</strong>。</p>
+          <ul>
+            <li>中心ほど高得点。端でも最低命中率を保証。</li>
+            <li>連続高精度でコンボ倍率が上昇。</li>
+            <li>Bubbleの水平移動はランダム方向で、中心狙いを成立させる。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="bubble-logic">
+      <h2>Bubble 挙動 / 当たり判定 / Shader 詳解</h2>
+      <p class="section-lead">
+        Bubble は <code>HeadingBall</code> の物理、<code>BubbleEffect</code> のヒット変形、
+        <code>BubbleShader</code> の透明膜、<code>BubbleBurst</code> の破裂演出で構成されます。
+        Ver1.3でも中核ロジックは維持されています。
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>通常モードの跳ね返り</h3>
+          <ol>
+            <li>Bubble が <code>HeadingZone</code> に衝突する。</li>
+            <li>頭ローカル座標へ変換し、中心からの <code>offset</code> を求める。</li>
+            <li><code>centerThreshold</code> 内は真上、外側は衝突方向へ <code>Slerp</code> して角度を付ける。</li>
+            <li><code>targetHeightY</code> と滞空倍率から垂直初速・カスタム重力を計算。</li>
+            <li>水平速度を更新し、Bubble の <code>linearVelocity</code> へ反映。</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>放置コンボ防止</h3>
+          <p>
+            Normal / TimeAttack では、前回とほぼ同じ頭ローカル位置で連続ヒットした場合に
+            <code>comboGuardDistance</code> と <code>comboGuardMaxRepeats</code> で放置判定します。
+            閾値を超えると命中率を0にし、ランダム水平ナッジでループを崩します。
+          </p>
+          <p class="note">Center Hit は毎回ランダム方向へ飛ばすため、同じ位置での放置ループが成立しにくい設計です。</p>
+        </div>
+      </div>
+      <h3>当たり判定と命中率</h3>
+      <div class="codebox">localHitPos = zone.InverseTransformPoint(ballPos)
+offsetXZ   = new Vector2(localHitPos.x, localHitPos.z)
+offset     = offsetXZ.magnitude
+accuracy   = CalculateAccuracyScore(offset)
+hitColor   = CalculateHitColor(localHitPos)</div>
+      <table>
+        <thead><tr><th>項目</th><th>通常 / TimeAttack</th><th>Center Hit</th></tr></thead>
+        <tbody>
+          <tr><td>命中評価</td><td>中心からの距離でスコア化。精度は色にも反映。</td><td><code>CenterHitAccuracy(offset)</code>。中心100%、端でも最低保証。</td></tr>
+          <tr><td>跳ね返り方向</td><td>中心は上、外側はヒット方向へ角度をつける。</td><td>採点と跳ね返りを分離し、毎回ランダム水平方向へ飛ばす。</td></tr>
+          <tr><td>二重判定</td><td>衝突判定と状態管理で抑制。</td><td><code>centerHitHitCooldown 0.3秒</code>。</td></tr>
+          <tr><td>壁反射</td><td>壁衝突時はステージ内へ戻す。</td><td>水平方向だけ反射し、テンポを保つ。</td></tr>
+        </tbody>
+      </table>
+      <h3>シャボン玉 Shader</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>透明膜とFresnel</h4>
+          <p>
+            BaseColor、Alpha、Fresnel を組み合わせ、外縁ほど光る薄膜感を作ります。
+            命中方向の色は <code>MaterialPropertyBlock</code> 経由で個体へ反映し、共有Materialを汚さない設計です。
+          </p>
+        </div>
+        <div class="card">
+          <h4>ぷにょ変形</h4>
+          <p>
+            <code>BubbleEffect.TriggerHitSquish(finalDir)</code> が衝突方向を渡し、
+            <code>_SquishProgress</code> を減衰振動として更新します。
+            Shader は <code>_HitDirection</code> 軸を縮め、直交方向を膨らませます。
+          </p>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Shader/Material パラメータ</th><th>役割</th></tr></thead>
+        <tbody>
+          <tr><td><code>_BaseColor</code></td><td>Bubble本体の薄い色。ヒット色と元色をブレンドする。</td></tr>
+          <tr><td><code>_FresnelColor</code></td><td>外縁の発光色。命中方向・反応の気持ちよさを視覚化。</td></tr>
+          <tr><td><code>_SquishProgress</code></td><td>ヒット直後の変形量。時間経過で0へ戻る。</td></tr>
+          <tr><td><code>_HitDirection</code></td><td>どの方向へ潰すか。物理反射方向に対応。</td></tr>
+          <tr><td><code>_Surface</code> / <code>_SrcBlend</code> / <code>_DstBlend</code></td><td>URPの透明描画/アルファブレンド。パーティクルやクラゲMaterialでも手動設定が必要な箇所あり。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ocean-cycle">
+      <h2>Ver1.3 海の時間帯サイクル</h2>
+      <p class="section-lead">
+        <code>OceanTimeOfDayCycle</code> は時間帯Profileをキーフレームとして並べ、現在時刻に応じて海の色・フォグ・ライト・HUD・魚の見え方を滑らかに補間します。
+        タイトルは実時刻、ゲームシーンは各モードの既定Profileを基準にします。
+      </p>
+      <div class="time-band" aria-label="24時間サイクル">
+        <div class="time-seg time-night">Night<br>白み始め前</div>
+        <div class="time-seg time-dawn">Dawn<br>日の出</div>
+        <div class="time-seg time-day">Day<br>昼プラトー</div>
+        <div class="time-seg time-gold">Gold<br>夕方</div>
+        <div class="time-seg time-sunset">Sunset<br>日没</div>
+        <div class="time-seg time-night">Night<br>夜</div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>時刻ソース</h3>
+          <table>
+            <tbody>
+              <tr><th>RealTime</th><td>端末の <code>DateTime.Now</code> と実日付。タイトル向け。</td></tr>
+              <tr><th>Fixed</th><td><code>_fixedProfile</code> を常時適用。ゲーム3シーン向け。</td></tr>
+              <tr><th>Manual</th><td><code>_debugHour</code> スライダー。調整・プレビュー用。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>季節モデル</h3>
+          <p>
+            愛媛県伊予市/松山相当の値をもとに、夏至と冬至の日の出・日の入りをcosで補間します。
+            Fixedモードでは安定したゲーム画面を優先し、季節係数は0.5で固定します。
+          </p>
+          <table>
+            <tbody>
+              <tr><th>夏至</th><td>日の出 4:58 / 日の入り 19:23</td></tr>
+              <tr><th>冬至</th><td>日の出 7:10 / 日の入り 17:05</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <h3>既定キーフレーム</h3>
+      <table>
+        <thead><tr><th>#</th><th>Profile</th><th>基準</th><th>Offset</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Night</td><td>Sunrise</td><td>-0.5h</td><td>日の出30分前、白み始め。</td></tr>
+          <tr><td>2</td><td>Dawn</td><td>Sunrise</td><td>0h</td><td>夜明けのピーク。</td></tr>
+          <tr><td>3</td><td>Day</td><td>Sunrise</td><td>+1.5h</td><td>完全な昼へ。</td></tr>
+          <tr><td>4</td><td>Day</td><td>Sunset</td><td>-2.5h</td><td>昼プラトー終わり。</td></tr>
+          <tr><td>5</td><td>GoldenSunset</td><td>Sunset</td><td>-1.5h</td><td>ゴールデンアワー。</td></tr>
+          <tr><td>6</td><td>Sunset</td><td>Sunset</td><td>-0.75h</td><td>夕焼け・薄明。</td></tr>
+          <tr><td>7</td><td>Night</td><td>Sunset</td><td>+0.5h</td><td>完全な夜。</td></tr>
+        </tbody>
+      </table>
+      <div class="grid">
+        <div class="panel good">
+          <h3>soft-only 適用</h3>
+          <p>
+            ランタイムでは <code>OceanUnderwaterSettings.ApplySoftTo()</code> を使い、色・強度・フォグなど軽量な値だけを反映します。
+            最後に <code>ApplyExternalEnvironmentChanges(false)</code> を呼び、光柱・粒子・カースティクスの再生成を避けます。
+          </p>
+        </div>
+        <div class="panel warn">
+          <h3>カースティクス配置保護</h3>
+          <p>
+            TitleとGameではTerrain高さが異なります。共有Profileが <code>groundY</code> を上書きすると光模様が床下へ潜るため、
+            <code>applyCausticsPlacement</code> がONのときだけ配置を適用します。
+          </p>
+        </div>
+      </div>
+      <h3>設定 / ポーズの海時間タブ</h3>
+      <div class="mini-tabs" aria-label="海時間タブ">
+        <span>現実</span><span class="selected">日中</span><span>夕焼け</span><span>日没</span><span>夜</span>
+      </div>
+      <table>
+        <thead><tr><th>シーン</th><th>既定</th><th>保存キー</th><th>UI導線</th></tr></thead>
+        <tbody>
+          <tr><td>Title</td><td>Real（実時刻＋季節）</td><td><code>settings_ocean_time_of_day_title</code></td><td>設定画面</td></tr>
+          <tr><td>NormalEndless</td><td>Day</td><td><code>settings_ocean_time_of_day_normal</code></td><td>ポーズ画面</td></tr>
+          <tr><td>TimeAttack</td><td>Night</td><td><code>settings_ocean_time_of_day_timeattack</code></td><td>ポーズ画面</td></tr>
+          <tr><td>CenterHit</td><td>GoldenSunset</td><td><code>settings_ocean_time_of_day_centerhit</code></td><td>ポーズ画面</td></tr>
+        </tbody>
+      </table>
+      <div class="flow">
+        <span class="step">タブ選択</span><span class="arrow">→</span>
+        <span class="step">GameSettingsStore保存</span><span class="arrow">→</span>
+        <span class="step">OnOceanTimeOfDayChanged</span><span class="arrow">→</span>
+        <span class="step">Cycle.ApplyNow()</span><span class="arrow">→</span>
+        <span class="step">海が即時切替</span>
+      </div>
+    </section>
+
+    <section id="jellyfish">
+      <h2>Ver1.3 クラゲコンパニオン</h2>
+      <p class="section-lead">
+        クラゲコンパニオンは、クラリィやプレイヤーの周囲を長時間ふわふわ漂う癒やし要素です。
+        タイトルでは経過時間で増え、ゲームでは距離連動に切り替えられる構造になっています。
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>生成ルール</h3>
+          <table>
+            <tbody>
+              <tr><th>時間スケジュール</th><td><code>15, 45, 180, 600</code>秒。タイトルでは15秒で1匹、45秒で2匹、3分で3匹、10分で4匹。</td></tr>
+              <tr><th>距離連動</th><td><code>15, 40, 80, 140</code>m。<code>"Bubble"</code>タグの <code>HeadingBall.TotalTravelDistance</code> を読む。</td></tr>
+              <tr><th>同時生成</th><td><code>SPAWN_STAGGER 0.6秒</code> で1匹ずつ。スロット数と <code>maxCompanions</code> で上限。</td></tr>
+              <tr><th>ターゲット</th><td><code>TitleClarieController</code> → <code>PlayerController</code> の順に自動検出。Explicit指定も可能。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>配置スロット</h3>
+          <p>中心は <code>target.position + (0, 0.6, 0)</code>。既定はクラリィ周囲4点です。Sceneビューでは選択時ギズモで番号付きの球が表示されます。</p>
+          <table>
+            <tbody>
+              <tr><th>#1</th><td><code>(-0.80, -0.50, -0.30)</code> 左下</td></tr>
+              <tr><th>#2</th><td><code>(0.85, 0.70, -0.30)</code> 右上</td></tr>
+              <tr><th>#3</th><td><code>(0.95, 0.00, -0.20)</code> 右</td></tr>
+              <tr><th>#4</th><td><code>(-0.85, 0.60, -0.30)</code> 左上</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <h3>1匹の状態遷移</h3>
+      <div class="flow">
+        <span class="step">Idle</span><span class="arrow">→</span>
+        <span class="step">Approaching<br>画面外から一定速度</span><span class="arrow">→</span>
+        <span class="step">Attached<br>SmoothDampで追従</span><span class="arrow">→</span>
+        <span class="step">Leaving<br>上方へフェード</span>
+      </div>
+      <div class="grid">
+        <div class="panel good">
+          <h3>動きのロジック</h3>
+          <ul>
+            <li>接近は <code>Vector3.MoveTowards</code> による一定速度。到着時に急に詰める不自然さを防ぐ。</li>
+            <li>追従は <code>Vector3.SmoothDamp</code>。<code>MAX_SMOOTH_DT 0.05</code> と1フレーム移動上限でワープを防止。</li>
+            <li>スロット内で <code>wanderRadius</code> とsin波を使い、固定点ではなく持ち場の中で漂わせる。</li>
+            <li><code>minDistanceFromCenter 0.85</code> でクラリィに近づきすぎない。</li>
+          </ul>
+        </div>
+        <div class="panel night">
+          <h3>アニメとマテリアル</h3>
+          <ul>
+            <li><code>jellyfish_animated.fbx</code> + <code>Jellyfish.controller</code> でFBXのベル収縮アニメをループ。</li>
+            <li>Animator+Controllerを検出した場合、コード側の拍動/上下浮遊/傾きは自動OFF。</li>
+            <li><code>Jellyfish.mat</code> はURP/Lit Transparent、BaseColorは白寄り水色、Alpha 0.45。</li>
+            <li>フェードは <code>MaterialPropertyBlock</code> で <code>_BaseColor.a</code> を個体ごとに更新。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="codebox">Approaching:
+  smoothPos = MoveTowards(smoothPos, followTarget, approachSpeed * dt)
+  if Distance(smoothPos, followTarget) <= arriveDistance:
+      phase = Attached
+      velocity = 0
+
+Attached:
+  smoothPos = SmoothDamp(prev, followTarget, velocity, followSmoothTime, maxFollowSpeed, clampedDt)
+  clamp per-frame movement to maxFollowSpeed * clampedDt
+
+Animated FBX:
+  if Animator + RuntimeAnimatorController exists:
+      position = smoothPos
+      rotation = uprightEuler
+      localScale = baseScale
+      skip procedural pulse/bob/sway</div>
+    </section>
+
+    <section id="features">
+      <h2>搭載機能一覧</h2>
+      <div class="grid">
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/mode_normal.png" alt=""></div><div><h3>ヘディングゲーム</h3><p>Bubble衝突、スコア、距離、命中率、難易度ランプ、コンボガード、壁反射、破裂。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/mode_timeattack.png" alt=""></div><div><h3>モード選択</h3><p>Normal / Time Attack / Center Hit をTitleのカードから選択。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/clock_icon.png" alt=""></div><div><h3>Clock Mode</h3><p>時計、ポモドーロ、タイマー。作業用・勉強用の眺める体験。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/jellyicon.png" alt=""></div><div><h3>Jellyfish Companion</h3><p>時間/距離でクラゲが増え、クラリィの周りを漂う。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/settings_icon.png" alt=""></div><div><h3>Settings</h3><p>BGM、SE、振動、海時間。UI Toolkitで構築。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/pause_icon.png" alt=""></div><div><h3>Pause</h3><p>再開、タイトル復帰、海時間切替。timeScale=0でも即時反映。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/ranking_icon.png" alt=""></div><div><h3>Ranking</h3><p>PlayFabでランキング取得。未ログイン時はローカル表示。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/shop_icon.png" alt=""></div><div><h3>Store / Ads</h3><p>リワード広告、バナー、広告削除IAP、購入復元。</p></div></div>
+      </div>
+    </section>
+
+    <section id="fish-species">
+      <h2>出現する魚の種類 / 頻度 / 特徴</h2>
+      <p class="section-lead">
+        <code>FishParticleManager</code> のデフォルト定義は13種です。画像素材が確認できる魚は12種で、
+        <code>Oyabiccha</code> は定義に存在しますが画像ファイルは今回未確認です。
+        ほぼ全魚種が <code>avoidCenterArea = true</code> で、プレイヤーとBubbleの通り道を避けます。
+      </p>
+      <div class="fish-grid">
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_sorasuzumedai.png" alt="ソラスズメダイ"><h4>ソラスズメダイ</h4><p>重み1.5、3〜7匹。青い高頻度差し色。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_kingyohanadai.png" alt="キンギョハナダイ"><h4>キンギョハナダイ</h4><p>重み1.5、3〜7匹。暖色アクセント。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_kyusen.png" alt="キュウセン"><h4>キュウセン</h4><p>重み0.7、0〜2匹。低めの高さ。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_chouchouuo.png" alt="チョウチョウウオ"><h4>チョウチョウウオ</h4><p>重み1.2、1〜4匹。Hovering。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_hanagoi.png" alt="ハナゴイ"><h4>ハナゴイ</h4><p>重み0.85、2〜4匹。紫ピンク。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_kibinago.png" alt="キビナゴ"><h4>キビナゴ</h4><p>重み0.8、5〜12匹。速い銀色の流れ。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_maaji.png" alt="マアジ"><h4>マアジ</h4><p>重み0.65、2〜5匹。中層回遊。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_isaki.png" alt="イサキ"><h4>イサキ</h4><p>重み0.55、1〜3匹。落ち着いた中型魚。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_mebaru.png" alt="メバル"><h4>メバル</h4><p>重み0.5、0〜2匹。海底近くでゆっくり。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_madai.png" alt="マダイ"><h4>マダイ</h4><p>重み0.95、1〜2匹。愛媛らしさ。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_kawahagi.png" alt="カワハギ"><h4>カワハギ</h4><p>重み0.5、0〜2匹。StopAndGo。</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/fish_buri.png" alt="ブリ"><h4>ブリ</h4><p>重み0.25、0〜1匹。低頻度の見せ場。</p></div>
+      </div>
+      <table>
+        <thead><tr><th>魚種</th><th>同時表示</th><th>出現重み</th><th>群れ</th><th>動き</th><th>特徴</th></tr></thead>
+        <tbody>
+          <tr><td>Sorasuzumedai</td><td>3〜7</td><td>1.5</td><td>SmallGroup 2〜5</td><td>GentleWave</td><td>青い差し色。見せ場の多い高頻度枠。</td></tr>
+          <tr><td>Kingyohanadai</td><td>3〜7</td><td>1.5</td><td>SmallGroup 2〜5</td><td>GentleWave</td><td>オレンジ系。ソラスズメダイ相当の頻度。</td></tr>
+          <tr><td>Kyusen</td><td>0〜2</td><td>0.7</td><td>None</td><td>GentleWave</td><td>砂地・岩場。低めに出る。</td></tr>
+          <tr><td>Chouchouuo</td><td>1〜4</td><td>1.2</td><td>None</td><td>Hovering</td><td>ふわっと漂う観賞魚枠。</td></tr>
+          <tr><td>Hanagoi</td><td>2〜4</td><td>0.85</td><td>SmallGroup 2〜4</td><td>GentleWave</td><td>紫ピンクで色幅を追加。</td></tr>
+          <tr><td>Oyabiccha</td><td>2〜4</td><td>0.85</td><td>SmallGroup 2〜3</td><td>GentleWave</td><td>定義あり。画像ファイルは未確認。</td></tr>
+          <tr><td>Kibinago</td><td>5〜12</td><td>0.8</td><td>LooseStream 4〜8</td><td>FastStraight</td><td>銀色の小魚の流れ。</td></tr>
+          <tr><td>Maaji</td><td>2〜5</td><td>0.65</td><td>LooseStream 2〜4</td><td>FastStraight</td><td>自然なスピード感。</td></tr>
+          <tr><td>Isaki</td><td>1〜3</td><td>0.55</td><td>SmallGroup 2</td><td>Straight</td><td>落ち着いた中型魚。</td></tr>
+          <tr><td>Mebaru</td><td>0〜2</td><td>0.5</td><td>None</td><td>Hovering</td><td>岩場・海底近く。</td></tr>
+          <tr><td>Madai</td><td>1〜2</td><td>0.95</td><td>None</td><td>Straight</td><td>愛媛らしさの主役魚。奥でも小さくしすぎない。</td></tr>
+          <tr><td>Kawahagi</td><td>0〜2</td><td>0.5</td><td>None</td><td>StopAndGo</td><td>止まる/動く変化。</td></tr>
+          <tr><td>Buri</td><td>0〜1</td><td>0.25</td><td>RareSmallGroup 2〜3</td><td>FastStraight</td><td>低頻度の大型回遊魚。実効重みは背景補正でさらに控えめ。</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="seashells">
+      <h2>貝がら通貨 / 衣装コレクション</h2>
+      <p class="section-lead">
+        魚図鑑と同じ海のコレクションとして、10種の貝がらを用意しています。貝がらはクラリィの衣装と交換するゲーム内通貨です。
+        Normal Endlessではフィールドで拾い、Time AttackとCenter Hitではプレイへの集中を優先してリザルト報酬として獲得します。
+      </p>
+      <table>
+        <thead><tr><th>モード</th><th>フィールド貝がら</th><th>獲得条件</th><th>報酬</th><th>リザルト表示</th></tr></thead>
+        <tbody>
+          <tr><td>Normal Endless</td><td>表示（同時5個）</td><td>Playing中に接近して拾得</td><td>貝がらごとの value（現行は1）</td><td>貝がらアイコン + 「拾った貝がら +N」</td></tr>
+          <tr><td>Time Attack</td><td>非表示</td><td>60秒を完走</td><td>3 + floor(ヒット数 / 10)、最大8</td><td>貝がらアイコン + 「獲得した貝がら +N」</td></tr>
+          <tr><td>Center Hit</td><td>非表示</td><td>15回のヘディングをクリア</td><td>6 + floor(最終スコア / 100,000)、最大10</td><td>貝がらアイコン + 「クリア報酬 +N」</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Normalの貝がらはプレイ開始時、または自分で拾った貝がらの20〜35秒後の再出現時だけに現れます。
+        未取得の貝がらをプレイヤー移動に合わせて再配置しないため、理由のない突然出現を防ぎます。
+      </p>
+
+      <h3>貝がらの種類一覧</h3>
+      <p class="section-lead">
+        <code>SeashellDecorSetup.shells</code> で一覧管理します。各定義は名称、テクスチャ、価値、出現重み、サイズ補正、色補正を持ち、
+        現行の10種はすべて価値1・重み1です。
+      </p>
+      <div class="fish-grid">
+        <div class="fish-card"><img src="BubbleSiteAssets/Aogai.png" alt="青貝"><h4>青貝</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Asari.png" alt="アサリ"><h4>アサリ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Awabi.png" alt="アワビ"><h4>アワビ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Benigai.png" alt="ベニガイ"><h4>ベニガイ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Hiougigai_orange.png" alt="ヒオウギガイ橙"><h4>ヒオウギガイ（橙）</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Hiougigai_purple.png" alt="ヒオウギガイ紫"><h4>ヒオウギガイ（紫）</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Itokagegai.png" alt="イトカケガイ"><h4>イトカケガイ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Sakuragai.png" alt="サクラガイ"><h4>サクラガイ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Sazae.png" alt="サザエ"><h4>サザエ</h4><p>価値1 / 重み1</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/Tsumetagai.png" alt="ツメタガイ"><h4>ツメタガイ</h4><p>価値1 / 重み1</p></div>
+      </div>
+
+      <h3>貝がらで手に入る衣装</h3>
+      <p class="section-lead">
+        既定の「いつものワンピース」に加え、集めた貝がらで7着を交換できます。交換後はクローゼットから試着・装備でき、
+        タイトルとゲーム中のクラリィへ即時反映されます。
+      </p>
+      <div class="fish-grid">
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_check.png" alt="チェックスタイル"><h4>チェックスタイル</h4><p>20 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_boyish.png" alt="ボーイッシュ"><h4>ボーイッシュ</h4><p>50 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_pajama.png" alt="パジャマ"><h4>パジャマ</h4><p>70 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_natsu.png" alt="夏ワンピ"><h4>夏ワンピ</h4><p>120 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_classic.png" alt="クラシックドレス"><h4>クラシックドレス</h4><p>200 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_china.png" alt="チャイナドレス"><h4>チャイナドレス</h4><p>300 貝がら</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_kimono.png" alt="着物"><h4>着物</h4><p>400 貝がら</p></div>
+      </div>
+
+      <h3>有料課金で手に入る衣装 / 広告削除</h3>
+      <p class="section-lead">
+        iOSのStore「ストア課金」タブでは、貝がら交換とは別に衣装と広告削除を購入できます。
+        価格はストアの商品情報を優先して表示し、下記はカタログに設定された表示用の目安です。
+      </p>
+      <div class="fish-grid">
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_gakuen.png" alt="学園制服"><h4>学園制服</h4><p>目安 $1.00</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_arabian.png" alt="アラビアン"><h4>アラビアン</h4><p>目安 $2.00</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_witch.png" alt="魔法使いの服"><h4>魔法使いの服</h4><p>目安 $2.00</p></div>
+        <div class="fish-card"><img src="BubbleSiteAssets/outfit_princess.png" alt="プリンセス"><h4>プリンセス</h4><p>目安 $2.00</p></div>
+      </div>
+      <table>
+        <thead><tr><th>商品</th><th>商品識別子（公開用）</th><th>内容</th><th>価格 / 復元</th></tr></thead>
+        <tbody>
+          <tr><td>広告削除</td><td><code>••••••••</code></td><td>バナー・インタースティシャル等の広告を削除。</td><td>ストア表示価格 / 非消耗型・購入復元対応</td></tr>
+          <tr><td>学園制服、アラビアン、魔法使いの服、プリンセス</td><td><code>••••••••</code></td><td>購入後はクローゼットで試着・装備。</td><td>ストア表示価格 / 非消耗型・購入復元対応</td></tr>
+        </tbody>
+      </table>
+      <p class="note">有料衣装のストア表示はiOS向けの仕様です。Androidでは同じ衣装を貝がら交換として扱い、iOS有料衣装の交換数は基準価格の一律2倍です（学園制服 1,000、アラビアン／魔法使いの服／プリンセス 各2,000貝がら）。</p>
+    </section>
+
+    <section id="technical">
+      <h2>技術仕様</h2>
+      <dl class="spec-list">
+        <dt>エンジン</dt><dd>Unity 6000.3.10f1、Universal Render Pipeline。</dd>
+        <dt>入力</dt><dd>Unity Input System。モバイル向けタッチ/仮想入力、プレイヤー移動。</dd>
+        <dt>UI</dt><dd>UI Toolkit（<code>UIDocument</code>、UXML、USS）。UGUI Canvasは基本使用しない。</dd>
+        <dt>描画</dt><dd>Bubble Shader、URP透明描画、UnderwaterDecorSetup、Renderer Feature、Particle System。</dd>
+        <dt>水中演出</dt><dd>カースティクス、光柱、浮遊粒子、スクリーン屈折、深度フォグ、魚群、サメ、クラゲ。</dd>
+        <dt>保存</dt><dd>PlayerPrefs。音量/BGM/振動、海時間、広告削除状態、ローカル統計など。</dd>
+        <dt>オンライン</dt><dd>PlayFabログイン/ランキング/Statistic送信。未ログイン時はローカルフォールバック。</dd>
+        <dt>収益化</dt><dd>AdMobリワード/バナー、IAP広告削除、購入復元。</dd>
+        <dt>ネイティブ</dt><dd>iOS/Android触覚フィードバック、Store Review、Native Share、iOS表示名ローカライズ。</dd>
+      </dl>
+    </section>
+
+    <section id="scripts">
+      <h2>スクリプト構成</h2>
+      <div class="script-map">
+        <div class="script-row"><strong>GameSceneLogic</strong><span><code>Manager.cs</code>、<code>HeadingBall.cs</code>、<code>PlayerController.cs</code>、<code>PauseController.cs</code>、<code>GameMode.cs</code>。ゲーム進行、Bubble物理、入力、ポーズ、モード/海時間シーン区分。</span></div>
+        <div class="script-row"><strong>Settings / UI</strong><span><code>SettingsController.cs</code>、<code>GameSettingsStore.cs</code>、UXML/USS。音量・振動・海時間タブを保存/反映。</span></div>
+        <div class="script-row"><strong>Ocean Time</strong><span><code>OceanTimeOfDayCycle.cs</code>、<code>OceanCycleBootstrap.cs</code>、<code>OceanTimeOfDayProfile.cs</code>、<code>OceanTimeOfDayProfileSet.cs</code>、Editor。24hサイクル、固定Profile、Dawn、soft-only適用。</span></div>
+        <div class="script-row"><strong>Jellyfish</strong><span><code>JellyfishCompanion.cs</code>、<code>JellyfishCompanionManager.cs</code>、<code>JellyfishCompanionSetup.cs</code>。クラゲ生成、追従、FBXアニメ、URP半透明Material生成。</span></div>
+        <div class="script-row"><strong>Bubble Effects</strong><span><code>BubbleBurst.cs</code>、<code>BubbleEffect.cs</code>、<code>BubbleRemnant.cs</code>、<code>BlobShadow.cs</code>。破裂、ぷにょ変形、残骸、影。</span></div>
+        <div class="script-row"><strong>Sea Life</strong><span><code>FishParticleManager.cs</code>、<code>SeaLifeDecorSetup.cs</code>、<code>SeaLifeStreamingDecor.cs</code>、<code>SharkSpawner.cs</code>、<code>SharkSwimmer.cs</code>。魚、サメ、装飾、品質プリセット。</span></div>
+        <div class="script-row"><strong>Network / Store</strong><span><code>LeaderboardClient.cs</code>、AdMob、IAP、StoreReview、NativeShare。ランキング、広告、購入、レビュー、共有。</span></div>
+        <div class="script-row"><strong>Editor</strong><span><code>OceanTimeOfDayCycleEditor.cs</code>、<code>OceanTimeOfDayControllerEditor.cs</code>、<code>JellyfishCompanionSetup.cs</code>、iOS PostProcess群。調整・生成・ビルド後処理。</span></div>
+      </div>
+    </section>
+
+    <section id="logs">
+      <h2>ログ一覧</h2>
+      <p class="section-lead">
+        ここではシステムのデバッグ出力ではなく、ユーザー操作・利用状況として記録される Unity Analytics のイベントと、
+        PlayFabへ送信する Statistic / ランキング値をまとめます。<code>Debug.Log</code> は実装診断用のため、この一覧の中心からは外します。
+      </p>
+      <h3>Unity Analytics: <code>button_tapped</code></h3>
+      <table>
+        <thead><tr><th>イベント</th><th>パラメータ</th><th>画面・ボタンの記録例</th></tr></thead>
+        <tbody>
+          <tr><td><code>button_tapped</code></td><td><code>screen</code>、<code>button</code></td><td>すべてのボタン操作を共通形式で送信。UGS初期化前は送信しない。</td></tr>
+          <tr><td>Title</td><td><code>screen=Title</code></td><td><code>Start</code>、<code>Start_Normal</code>、<code>Start_TimeAttack</code>、<code>Start_CenterHit</code>、<code>ClockMode</code>、<code>Settings</code>、<code>Ranking</code>、<code>Store</code>、<code>Closet</code>。</td></tr>
+          <tr><td>Game</td><td><code>screen=Game</code></td><td><code>Start</code>、<code>Pause</code>、<code>Resume</code>、<code>Retry</code>、<code>StartOver</code>、<code>Title</code>、<code>Share</code>、<code>ReviveAd</code>、<code>Time_Day</code> など。</td></tr>
+          <tr><td>Settings / Pause</td><td><code>screen=Settings</code> または <code>Game</code></td><td><code>BgmSelect</code>、<code>VibrationSelect</code>、<code>Contact</code>、<code>Time_Real</code> / <code>Time_Day</code> / <code>Time_Sunset</code> など。</td></tr>
+          <tr><td>ClockMode</td><td><code>screen=ClockMode</code></td><td><code>Tab_Clock</code>、<code>Play_Pomodoro</code>、<code>Pause_Timer</code>、<code>Reset_Timer</code>、<code>Close</code>、<code>Exit</code>。</td></tr>
+          <tr><td>Closet / Store / Ranking</td><td>画面名 + 商品/操作名</td><td><code>Equip_outfit_*</code>、<code>Exchange_outfit_*</code>、<code>Store_outfit_*</code>、<code>Tab_InGame</code>、<code>Tab_RealMoney</code>、<code>Restore</code>、<code>SelectType</code>、<code>SelectChoice</code>。</td></tr>
+        </tbody>
+      </table>
+      <p class="note">iOSではATTの許可状態を確認してからデータ収集を開始します。ATT拒否時はAnalytics収集を開始せず、初期化完了前のボタン操作もキューには入れません。</p>
+
+      <h3>PlayFab: Statistic / ランキング</h3>
+      <table>
+        <thead><tr><th>Statistic名</th><th>記録タイミング</th><th>集計</th><th>値</th></tr></thead>
+        <tbody>
+          <tr><td><code>BubblePop_HighScore</code></td><td>Normal Endlessの新しいベストスコア確定時</td><td>Max</td><td>ヘディング回数</td></tr>
+          <tr><td><code>BubblePop_Distance</code></td><td>Normal Endlessの距離ベスト更新時</td><td>Max</td><td>距離（m × 10）</td></tr>
+          <tr><td><code>BubblePop_TotalScore</code></td><td>ゲームオーバー時。セッション未送信分のみ</td><td>Sum</td><td>全モード累計ヘディング回数</td></tr>
+          <tr><td><code>BubblePop_TotalDistance</code></td><td>ゲームオーバー時。セッション未送信分のみ</td><td>Sum</td><td>全モード累計距離（m × 10）</td></tr>
+          <tr><td><code>BubblePop_60secDistance</code></td><td>Time Attackの距離ベスト更新時</td><td>Max</td><td>60秒間の距離（m × 10）</td></tr>
+          <tr><td><code>BubblePop_CenterHitScore</code></td><td>Center Hitのスコアベスト更新時</td><td>Max</td><td>Center Hitスコア</td></tr>
+          <tr><td><code>BubblePop_CenterHitAvePercent</code></td><td>Center Hitの平均命中率ベスト更新時</td><td>Max</td><td>平均命中率（0〜10000。87.65% → 8765）</td></tr>
+        </tbody>
+      </table>
+      <div class="grid">
+        <div class="panel good">
+          <h3>PlayFab送信の扱い</h3>
+          <ul>
+            <li>ゲームオーバー時にモード別のStatisticを更新。</li>
+            <li>複数Statisticは1回の <code>UpdatePlayerStatistics</code> にまとめて送信。</li>
+            <li>未ログイン時は送信待ちキューへ保持し、ログイン後にまとめて送信。</li>
+            <li>ランキング画面は <code>GetLeaderboardAroundPlayer</code> で自分周辺を取得。</li>
+          </ul>
+        </div>
+        <div class="panel night">
+          <h3>フォールバック</h3>
+          <p>PlayFab未ログイン、開発者モード、SDK未定義時は、同じStatistic名に対応する <code>PlayerPrefs</code> のローカルベストを表示します。オンライン値とローカル値を混同しないよう、ランキング画面ではローカルフォールバックとして扱います。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="release-check">
+      <h2>Ver1.3 リリース確認観点</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>海時間</h3>
+          <ul>
+            <li>TitleでReal選択時、端末時刻に応じた見た目になる。</li>
+            <li>設定タブでDay/Gold/Sunset/Nightへ切り替わり、保存後も維持される。</li>
+            <li>ゲーム中ポーズで海時間を切り替え、timeScale=0でも即時反映される。</li>
+            <li>Normal/TimeAttack/CenterHitの保存スロットが混ざらない。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>クラゲ</h3>
+          <ul>
+            <li>Companion Prefabが各シーンで設定済み。</li>
+            <li>タイトル滞在15秒以降に画面外から自然に登場する。</li>
+            <li>Animator付きFBXではコード拍動がOFFになり、二重アニメにならない。</li>
+            <li>シーン遷移時にターゲット消失で自滅し、不要な残骸が残らない。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="appendix-docs">
+      <h2>Appendix / 関連解説書</h2>
+      <p class="section-lead">同じ <code>Docs</code> ディレクトリにある実装解説を、仕様書の補足として参照できます。</p>
+      <div class="doc-links">
+        <a class="doc-link" href="../OceanTimeOfDayCycleGuide.html"><strong>Ocean Time Of Day Cycle Guide</strong><span>Ver1.3の24時間サイクル、Dawn、季節、soft-only適用、設定/ポーズ連携。</span></a>
+        <a class="doc-link" href="../JellyfishCompanionGuide.html"><strong>Jellyfish Companion Guide</strong><span>クラゲの生成スロット、登場タイミング、追従、FBXアニメ、Editorセットアップ。</span></a>
+        <a class="doc-link" href="../OceanTimeOfDayImplementationGuide.html"><strong>Ocean Time Of Day Implementation Guide</strong><span>従来のProfile/Controller実装、Day/Sunset/GoldenSunset/Nightの作成・適用。</span></a>
+        <a class="doc-link" href="../FishParticleManager.html"><strong>Fish Particle Manager</strong><span>魚群表現、魚種設定、Particle System、近接フェード、遠景トント。</span></a>
+        <a class="doc-link" href="../UnderwaterEffectsSpec.html"><strong>Underwater Effects Spec</strong><span>カースティクス、光柱、スクリーン屈折、海中粒子など水中演出全体。</span></a>
+        <a class="doc-link" href="../UnderwaterRendererFeature.html"><strong>Underwater Renderer Feature</strong><span>URP Renderer Feature と水中ポストエフェクトの技術詳細。</span></a>
+        <a class="doc-link" href="../TitleClarieController.html"><strong>Title Clarie Controller</strong><span>タイトル画面のクラリィ挙動、待機・反応・状態遷移。</span></a>
+        <a class="doc-link" href="../ClarieModelTechGuide.html"><strong>Clarie Model Tech Guide</strong><span>クラリィモデル、アニメーション、髪・腕・セットアップの技術メモ。</span></a>
+        <a class="doc-link" href="../AdMobImplementationGuide.html"><strong>AdMob Implementation Guide</strong><span>広告初期化、リワード、バナー、ログ確認。</span></a>
+        <a class="doc-link" href="../StoreIAPGuide.html"><strong>Store IAP Guide</strong><span>広告削除IAP、購入復元、ストア導線。</span></a>
+        <a class="doc-link" href="../StoreReviewGuide.html"><strong>Store Review Guide</strong><span>レビュー依頼の条件、OS依存挙動、実装上限。</span></a>
+        <a class="doc-link" href="../LocalStatsKeysExplained.html"><strong>Local Stats Keys Explained</strong><span>ローカル統計キーと保存データの説明。</span></a>
+      </div>
+    </section>
+
+    <div class="footer">
+      <strong>クラリィのぷくぷくシャボン玉はこび Ver1.3.0 仕様書</strong><br>
+      初版作成日: 2026-06-22 / 実機素材更新日: 2026-07-27
+    </div>
+  </main>
+</body>
+</html>
