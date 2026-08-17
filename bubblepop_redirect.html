@@ -6,6 +6,15 @@
   <meta name="theme-color" content="#84BFD1">
   <title>ストアへ移動します</title>
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5WVMPG8EV6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5WVMPG8EV6');
+  </script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -74,9 +83,40 @@
       const isAndroid = /Android/i.test(userAgent) || /Android/i.test(userAgentPlatform);
       const destination = isAndroid ? googlePlayUrl : appStoreUrl;
 
-      window.setTimeout(() => {
+      let trackingComplete = false;
+      let minimumDelayComplete = false;
+      let redirected = false;
+
+      const redirect = () => {
+        if (redirected) return;
+        redirected = true;
         window.location.replace(destination);
+      };
+
+      const redirectWhenReady = () => {
+        if (trackingComplete && minimumDelayComplete) {
+          redirect();
+        }
+      };
+
+      gtag('event', 'store_redirect', {
+        send_to: 'G-5WVMPG8EV6',
+        store_platform: isAndroid ? 'google_play' : 'app_store',
+        destination_url: destination,
+        event_callback: () => {
+          trackingComplete = true;
+          redirectWhenReady();
+        },
+        event_timeout: 1000
+      });
+
+      window.setTimeout(() => {
+        minimumDelayComplete = true;
+        redirectWhenReady();
       }, 1200);
+
+      // Ad blockers or network errors must not prevent the store redirect.
+      window.setTimeout(redirect, 1800);
     })();
   </script>
 </head>
