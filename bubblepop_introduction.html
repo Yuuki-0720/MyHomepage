@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>クラリィのぷくぷくシャボン玉はこび Ver1.3.0 仕様書</title>
+  <title>クラリィのぷくぷくシャボン玉はこび Ver1.4.0 仕様書</title>
   <style>
     :root {
       --ink: #123b52;
@@ -183,7 +183,7 @@
     }
 
     .phone-frame::after {
-      content: "ver 1.3.0";
+      content: "ver 1.4.0";
       position: absolute;
       right: 28px;
       top: 30px;
@@ -247,7 +247,7 @@
     }
 
     .toc a:hover { background: var(--soft); }
-    section { margin: 58px 0; }
+    section { margin: 58px 0; scroll-margin-top: 128px; }
 
     .section-lead {
       max-width: 880px;
@@ -472,6 +472,85 @@
       border-color: transparent;
     }
 
+    .capture-focus {
+      display: grid;
+      grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr);
+      gap: 22px;
+      align-items: center;
+      margin: 20px 0 26px;
+      padding: 22px;
+      border: 1px solid rgba(146,222,238,0.78);
+      border-radius: 26px;
+      background: linear-gradient(135deg, #f8feff, #eafaff);
+      box-shadow: 0 14px 32px rgba(22,120,168,0.10);
+    }
+    .capture-focus figure { margin: 0; text-align: center; }
+    .capture-focus img {
+      width: min(320px, 100%);
+      aspect-ratio: 9 / 19.5;
+      object-fit: cover;
+      object-position: top center;
+      border: 8px solid #fff;
+      border-radius: 30px;
+      box-shadow: 0 18px 38px rgba(15,96,134,0.20);
+    }
+    .capture-focus figcaption { margin-top: 9px; color: var(--muted); font-size: 12px; }
+
+    .mechanism-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .mechanism-step {
+      position: relative;
+      min-height: 126px;
+      padding: 16px;
+      border: 1px solid #c5ebf5;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 9px 22px rgba(22,120,168,0.08);
+    }
+    .mechanism-step b {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 8px;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(145deg, #53c8e6, #267fb9);
+    }
+    .mechanism-step strong { display: block; color: #145f83; }
+    .mechanism-step p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+
+    .formula-box {
+      margin: 16px 0;
+      padding: 17px 18px;
+      border: 1px solid #bde6f2;
+      border-radius: 18px;
+      background: #f7fdff;
+      color: #174d67;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.75;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .sun-figure {
+      margin: 18px 0;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid #bde6f2;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #dff8ff 0%, #f8fdff 74%, #e4f6ef 75%, #f7fff9 100%);
+      box-shadow: 0 14px 32px rgba(22,120,168,0.10);
+    }
+    .sun-figure svg { width: 100%; height: auto; display: block; }
+    .sun-figure figcaption { color: #416a7d; font-size: 13px; text-align: center; }
+    .angle-note { font-size: 12px; color: var(--muted); }
+
     .fish-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -539,6 +618,7 @@
       .grid-3 { grid-template-columns: 1fr; }
       .mode-grid { grid-template-columns: 1fr; }
       .doc-links { grid-template-columns: 1fr; }
+      .mechanism-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 720px) {
@@ -560,6 +640,7 @@
       .pill, .tag, .eyebrow { white-space: normal; }
       .time-band { grid-template-columns: 1fr; }
       .toc { position: relative; }
+      .capture-focus, .mechanism-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -569,28 +650,28 @@
       <span class="bubble-dot"></span>
       <div class="hero-copy">
         <img class="logo" src="BubbleSiteAssets/logo_jp_current.png" alt="クラリィのぷくぷくシャボン玉はこび ロゴ">
-        <span class="eyebrow">Release Specification / Ver1.3.0</span>
+        <span class="eyebrow">Release Specification / Ver1.4.0</span>
         <h1>クラリィのぷくぷくシャボン玉はこび 仕様書</h1>
         <p class="lead">
-          Ver1.3.0 は、シャボン玉を弾くプレイ快感と、眺めて落ち着ける水中体験をさらに強めたリリースです。
-          追加された海の24時間サイクル、設定/ポーズからの時間帯切替、クラゲコンパニオンを中心に、ゲーム仕様・技術仕様・スクリプト構成・ログをまとめます。
+          Ver1.4.0 は、そばにいるだけだったクラゲが「間に合わない一球」を助けてくれるところまで進化したリリースです。
+          海の光を時刻スライダーで連続的に選べる操作、GameSceneのクラリィの髪揺れも加え、遊びやすさと水中の生命感を磨きました。
         </p>
         <div class="hero-meta">
-          <span class="pill">Unity 6000.3.10f1 / URP</span>
+          <span class="pill">Unity 6000.5.6f1 / URP</span>
           <span class="pill">UI Toolkit</span>
           <span class="pill">iOS / Android</span>
-          <span class="pill">bundleVersion 1.3</span>
+          <span class="pill">bundleVersion 1.4.0</span>
         </div>
         <div class="tag-row">
-          <span class="tag new">New: Ocean 24h Cycle</span>
-          <span class="tag new">New: Jellyfish Companion</span>
-          <span class="tag good">Clock / Pomodoro / Timer</span>
-          <span class="tag night">PlayFab Ranking</span>
+          <span class="tag new">New: Jellyfish Rescue</span>
+          <span class="tag new">New: Ocean Light Slider</span>
+          <span class="tag good">Update: Clarie Hair Motion</span>
+          <span class="tag night">Minor Update / 1.4</span>
         </div>
       </div>
       <div class="phone-stack">
         <div class="phone-frame">
-          <img src="BubbleSiteAssets/title.jpg" alt="タイトル画面">
+          <img src="BubbleSiteAssets/title_v14.png" alt="Ver1.4.0 タイトル画面">
         </div>
         <div class="jelly-badge">
           <img src="BubbleSiteAssets/jellyicon.png" alt="クラゲアイコン">
@@ -600,12 +681,13 @@
 
     <nav class="toc" aria-label="目次">
       <a href="#summary">概要</a>
-      <a href="#release">v1.3 差分</a>
+      <a href="#release">v1.4 差分</a>
       <a href="#screens">画面</a>
       <a href="#modes">モード</a>
       <a href="#bubble-logic">Bubble</a>
       <a href="#ocean-cycle">海の時間帯</a>
       <a href="#jellyfish">クラゲ</a>
+      <a href="#clarie-hair">髪の揺れ</a>
       <a href="#features">機能一覧</a>
       <a href="#fish-species">魚図鑑</a>
       <a href="#seashells">貝がら / 衣装</a>
@@ -634,42 +716,42 @@
           <h3>作業用体験</h3>
           <p>
             Clock Mode / Pomodoro / Timer は、海中の美しさとクラリィのかわいい動きを活かした「眺めるゲーム」機能です。
-            Ver1.3では海の時間帯を実時刻や好みに合わせられるため、勉強・作業・休憩の背景としての価値が強まりました。
+            Ver1.4ではプリセット式だった海時間を連続スライダーへ更新し、勉強・作業・休憩の背景として好みの光を細かく選べるようになりました。
           </p>
           <ul>
             <li>タイトルは実時刻・季節に連動する海を表示可能。</li>
-            <li>ゲーム中もポーズから昼/夕焼け/日没/夜へ即時切替。</li>
-            <li>クラゲコンパニオンが長時間滞在時の癒やし要素になる。</li>
-            <li>仕様書のTitle代表画面は昼を基調にし、夕方・夜は海時間サイクルの差分として紹介。</li>
+            <li>設定/ポーズから4:30〜24:00を15分刻みで選択。</li>
+            <li>クラゲコンパニオンは癒やしに加え、1プレイ最大2回まで落下を救助。</li>
+            <li>ゲーム中の髪が移動・停止・旋回へ控えめに遅れて、ふわっと揺れる。</li>
           </ul>
         </div>
       </div>
       <dl class="spec-list">
         <dt>正式名称</dt><dd>クラリィのぷくぷくシャボン玉はこび / Bubble Pop</dd>
         <dt>ジャンル</dt><dd>海中カジュアルアクション、チル作業用ゲーム、時計/ポモドーロ/タイマー補助</dd>
-        <dt>対象端末</dt><dd>iOS / Android。Android Min SDK 33。</dd>
-        <dt>現行バージョン</dt><dd><code>bundleVersion: 1.3</code> / iOS <code>1.3.0</code> / Android versionCode <code>103</code></dd>
+        <dt>対象端末</dt><dd>iOS 15.0以上 / Android Min SDK 33、Target SDK 36。</dd>
+        <dt>現行バージョン</dt><dd><code>bundleVersion: 1.4.0</code> / iOS <code>1.4.0</code> / Android versionCode <code>137</code></dd>
         <dt>主な実装方針</dt><dd>Unity Input System、UI Toolkit、URP、イベント駆動、PlayFabランキング、モバイル触覚フィードバック。</dd>
       </dl>
     </section>
 
     <section id="release">
-      <h2>Ver1.3.0 リリース差分</h2>
+      <h2>Ver1.4.0 リリース差分</h2>
       <p class="section-lead">
-        Ver1.3.0 の中心は「時間で表情を変える海」と「クラリィのそばに集まるクラゲ」です。
-        既存のゲームモードやストア/ランキング機能は維持し、タイトル・設定・ポーズ・水中演出の体験密度を上げています。
+        Ver1.4.0 の中心は「クラゲが実際に助けてくれる体験」です。
+        1.3で追加したクラゲと24時間の海を遊びへ接続し、GameSceneのクラリィにもタイトル画面らしい髪の生命感を持たせるマイナーアップデートです。
       </p>
       <table>
         <thead><tr><th>区分</th><th>内容</th><th>主な実装</th></tr></thead>
         <tbody>
-          <tr><td>新規</td><td>24時間の海中時間帯サイクル。Day / Dawn / GoldenSunset / Sunset / Night を日の出・日の入り相対で補間。</td><td><code>OceanTimeOfDayCycle</code> / <code>OceanTimeOfDayProfile</code></td></tr>
-          <tr><td>新規</td><td>タイトルは端末の実時刻と日付に連動。愛媛県伊予市/松山相当の夏至・冬至モデルで日の出/日の入りを近似。</td><td><code>ResolveHour()</code> / <code>ResolveSeasonT()</code></td></tr>
-          <tr><td>新規</td><td>設定画面・ポーズ画面に「現実 / 日中 / 夕焼け / 日没 / 夜」の海時間タブを追加。</td><td><code>SettingsController</code> / <code>PauseController</code></td></tr>
-          <tr><td>新規</td><td>海の時間帯をシーン別に保存。タイトル、Normal、TimeAttack、CenterHit で独立スロットを持つ。</td><td><code>GameSettingsStore</code> / <code>GameModeInfo</code></td></tr>
-          <tr><td>新規</td><td>ゲーム3シーンへ OceanTimeOfDayCycle を実行時に自動付与。シーンへの手動配置漏れを防ぐ。</td><td><code>OceanCycleBootstrap</code></td></tr>
-          <tr><td>新規</td><td>クラゲコンパニオン。画面外から登場し、クラリィ/プレイヤーの周囲に定着して漂う。</td><td><code>JellyfishCompanion</code> / <code>JellyfishCompanionManager</code></td></tr>
-          <tr><td>新規</td><td>クラゲ用アニメ付きFBX、Animator Controller、半透明URPマテリアル、セットアップEditorツール。</td><td><code>JellyfishCompanionSetup</code> / <code>Jellyfish.mat</code></td></tr>
-          <tr><td>更新</td><td>時間帯Profileに Dawn を追加。Profile共有時に地形高さでカースティクスがずれないよう配置適用フラグを追加。</td><td><code>OceanTimeOfDay.Dawn</code> / <code>applyCausticsPlacement</code></td></tr>
+          <tr><td>新規</td><td>クラリィが走っても届かない落下だけをクラゲが判定し、ワープして下から1回弾く身代わりヘディング。</td><td><code>JellyfishRescueDirector</code> / <code>HeadingBall.RescueBounce()</code></td></tr>
+          <tr><td>新規</td><td>ワープの伸縮・粒子演出、救助後の上昇退場、20秒後の補充待ちを追加。</td><td><code>JellyfishCompanion</code> / <code>JellyfishWarpEffect</code></td></tr>
+          <tr><td>新規</td><td>救助成立位置へ「くらげがひろってくれた！」を約2秒表示するUI Toolkit吹き出し。</td><td><code>JellyfishRescueHud</code> / <code>Manager</code></td></tr>
+          <tr><td>更新</td><td>海時間の5プリセットタブを「現実/デフォルト」と「カスタム時刻」の2モード＋4:30〜24:00スライダーへ変更。</td><td><code>SettingsController</code> / <code>PauseController</code></td></tr>
+          <tr><td>更新</td><td>15分刻みの時刻をシーン別保存。1.3までの設定は日中12:00、夕焼け16:45、日没17:30、夜21:00へ自動移行。</td><td><code>GameSettingsStore</code></td></tr>
+          <tr><td>更新</td><td>カスタム時刻では実際の太陽高度から仰角を求め、昼の連続スライドでも影と光が変化。</td><td><code>OceanTimeOfDayCycle.SolarSunPitch()</code></td></tr>
+          <tr><td>新規</td><td>GameSceneのクラリィへ軽量な髪物理を自動付与。移動・停止・旋回へ遅れて62セグメントを固定60Hzで更新。</td><td><code>ClarieHairMotion</code> / <code>ClarieHairChains</code></td></tr>
+          <tr><td>調整</td><td>Normalでクラゲが増える距離を20 / 55 / 120 / 260mへ再調整し、登場間隔を広げた。</td><td><code>Game_Normal_Endless.unity</code></td></tr>
         </tbody>
       </table>
     </section>
@@ -677,12 +759,11 @@
     <section id="screens">
       <h2>画面・素材ギャラリー</h2>
       <p class="section-lead">
-        Ver1.3の実機画面を反映した縦画面の代表ギャラリーです。Titleは昼の画面を主役にし、
-        夕方・夜は海時間サイクルのバリエーションとして扱います。3モード選択、Clock / Pomodoro / Timer、
-        衣装クローゼット、海時間タブ付き設定、ゲーム中のHUD、結果、ランキング、ストアを確認できます。
+        Titleから作業用モード、衣装、ランキング、モード選択、各ゲーム画面、リザルト、設定、ストアへ進む従来の並び順を維持した代表ギャラリーです。
+        Ver1.4で追加したクラゲ救助とゲーム中の髪のカットは、既存画面の流れを崩さないよう最後に配置しています。
       </p>
       <div class="shot-grid">
-        <div class="shot-card"><img src="BubbleSiteAssets/title.jpg" alt="タイトル画面"><strong>Title</strong><p>ver 1.3.0表示、クラリィ、時計/設定/クローゼット/ランキング/ストアへのホーム。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/title_v14.png" alt="明るい日中のVer1.4.0タイトル画面"><strong>Title 1.4.0 / Daylight</strong><p>10:30の明るい海でUnity Game Viewを再収録。1.4.0表記とホーム導線を確認。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/clock.jpg" alt="時計・ポモドーロ・タイマー"><strong>Clock / Pomodoro / Timer</strong><p>時計、ポモドーロ、タイマーを切り替える作業用モード。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/closet.jpg" alt="衣装クローゼット"><strong>Closet</strong><p>貝がら残高と衣装カードを表示し、クラリィの衣装を切り替え。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/ranking.png" alt="ランキング"><strong>Ranking</strong><p>距離ランキングと自分の順位を表示。実機ではPlayFab名簿を確認。</p></div>
@@ -691,8 +772,9 @@
         <div class="shot-card"><img src="BubbleSiteAssets/burst_play.jpg" alt="Center Hitゲームプレイ"><strong>Center Hit</strong><p>15回制の中心ヒット。命中率、スコア、ヒット回数を表示。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/time_attack.jpg" alt="Time Attackゲームプレイ"><strong>Time Attack</strong><p>60秒制の距離チャレンジ。タイマー、距離、夜の海時間HUDを表示。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/result.jpg" alt="リザルト"><strong>Result</strong><p>距離、スコア、平均、拾った貝がら、復活/再試行/シェア導線。</p></div>
-        <div class="shot-card"><img src="BubbleSiteAssets/settings.jpg" alt="設定"><strong>Settings</strong><p>BGM/SE/振動、ユーザー情報、問い合わせ、海時間タブを管理。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/ocean_light_slider.png" alt="海の光カスタム時刻スライダー"><strong>Settings / Ocean Light Slider</strong><p>従来のSettings位置を1.4の画面へ差し替え。「カスタム」と10:30の時刻表示を確認。</p></div>
         <div class="shot-card"><img src="BubbleSiteAssets/store_remove_ads.jpg" alt="ストア"><strong>Store</strong><p>ゲーム内/ストア課金タブ、広告削除・衣装購入・購入復元。</p></div>
+        <div class="shot-card"><img src="BubbleSiteAssets/jellyfish_rescue_gameplay.png" alt="クラゲ救助とゲーム中のクラリィ"><strong>Ver1.4 / Jellyfish Rescue &amp; Game Hair</strong><p>1.4の追加カット。救助メッセージとクラゲ、GameSceneでふわっと動く後ろ髪を収録。</p></div>
       </div>
     </section>
 
@@ -716,7 +798,7 @@
           <ul>
             <li>時間切れまたは落下で終了。</li>
             <li>テンポ重視。ランキング/シェアとの相性が高い。</li>
-            <li>ポーズ画面から海時間を即時変更可能。</li>
+            <li>ポーズ画面から海の光をカスタム時刻へ即時変更可能。</li>
           </ul>
         </div>
         <div class="mode-card mode-center">
@@ -737,7 +819,7 @@
       <p class="section-lead">
         Bubble は <code>HeadingBall</code> の物理、<code>BubbleEffect</code> のヒット変形、
         <code>BubbleShader</code> の透明膜、<code>BubbleBurst</code> の破裂演出で構成されます。
-        Ver1.3でも中核ロジックは維持されています。
+        Ver1.4でも中核ロジックは維持されています。
       </p>
       <div class="grid">
         <div class="card">
@@ -806,11 +888,33 @@ hitColor   = CalculateHitColor(localHitPos)</div>
     </section>
 
     <section id="ocean-cycle">
-      <h2>Ver1.3 海の時間帯サイクル</h2>
+      <h2>Ver1.4 海の光スライダー / 24時間サイクル</h2>
       <p class="section-lead">
         <code>OceanTimeOfDayCycle</code> は時間帯Profileをキーフレームとして並べ、現在時刻に応じて海の色・フォグ・ライト・HUD・魚の見え方を滑らかに補間します。
-        タイトルは実時刻、ゲームシーンは各モードの既定Profileを基準にします。
+        Ver1.4では同じカーブをユーザーが時刻スライダーで直接たどれるようになりました。タイトルは実時刻、ゲームシーンは各モードの既定Profileを「デフォルト」として維持します。
       </p>
+      <div class="capture-focus">
+        <figure>
+          <img src="BubbleSiteAssets/ocean_light_slider.png" alt="Ver1.4の海の光カスタム時刻スライダー">
+          <figcaption>Unity Game View / Title設定 / カスタム 10:30</figcaption>
+        </figure>
+        <div>
+          <span class="tag new">1.4 UI replacement</span>
+          <h3>5つの時間帯タブを、時刻そのものを選ぶUIへ変更</h3>
+          <p>
+            上段のモードボタンで <strong>現実時刻（ゲーム中はデフォルト）</strong> と <strong>カスタム</strong> を切り替えます。
+            カスタム時だけ太陽〜月のスライダーが有効になり、つまみの上へ <code>10:30</code> のような確定時刻を表示します。
+          </p>
+          <table>
+            <tbody>
+              <tr><th>入力範囲</th><td><code>4:30〜24:00</code></td></tr>
+              <tr><th>確定刻み</th><td><code>0.25h = 15分</code>、全79段階</td></tr>
+              <tr><th>ライブ反映</th><td>ドラッグ中も海・フォグ・光源・HUD・魚を即時プレビュー</td></tr>
+              <tr><th>保存単位</th><td>Title / Normal / Time Attack / Center Hitの4スロット</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       <div class="time-band" aria-label="24時間サイクル">
         <div class="time-seg time-night">Night<br>白み始め前</div>
         <div class="time-seg time-dawn">Dawn<br>日の出</div>
@@ -827,6 +931,7 @@ hitColor   = CalculateHitColor(localHitPos)</div>
               <tr><th>RealTime</th><td>端末の <code>DateTime.Now</code> と実日付。タイトル向け。</td></tr>
               <tr><th>Fixed</th><td><code>_fixedProfile</code> を常時適用。ゲーム3シーン向け。</td></tr>
               <tr><th>Manual</th><td><code>_debugHour</code> スライダー。調整・プレビュー用。</td></tr>
+              <tr><th>Custom</th><td>設定/ポーズの時刻スライダー。共有Profileから24時間カーブを組み、指定時刻で固定。</td></tr>
             </tbody>
           </table>
         </div>
@@ -873,102 +978,268 @@ hitColor   = CalculateHitColor(localHitPos)</div>
           </p>
         </div>
       </div>
-      <h3>設定 / ポーズの海時間タブ</h3>
-      <div class="mini-tabs" aria-label="海時間タブ">
-        <span>現実</span><span class="selected">日中</span><span>夕焼け</span><span>日没</span><span>夜</span>
+      <h3>設定 / ポーズの「海の光」セレクタ</h3>
+      <div class="mini-tabs" aria-label="海の光モード">
+        <span>現実時刻 / デフォルト</span><span class="selected">カスタム</span><span>🌞 10:30 🌜</span>
+      </div>
+      <h3>スライダーの仕組み</h3>
+      <p class="section-lead">
+        UI Toolkitの標準Sliderではなく、既存のLiquid Glass意匠を保つ <code>VisualElement</code> として実装しています。
+        SettingsとPauseは同じ入力アルゴリズムを持ち、違うのは保存先のシーンスロットだけです。
+      </p>
+      <div class="mechanism-grid">
+        <div class="mechanism-step"><b>1</b><strong>Pointerを捕捉</strong><p><code>PointerDown</code> でCaptureし、画面外へ指が出てもドラッグを継続します。</p></div>
+        <div class="mechanism-step"><b>2</b><strong>X座標を0〜1化</strong><p>左右の操作余白を除いた幅で <code>localPosition.x</code> を正規化します。</p></div>
+        <div class="mechanism-step"><b>3</b><strong>時刻へ変換</strong><p><code>Lerp(4.5, 24, n)</code> で4:30〜24:00の生時刻を求めます。</p></div>
+        <div class="mechanism-step"><b>4</b><strong>15分へ丸める</strong><p><code>Round(hour / 0.25) × 0.25</code>。範囲外はClampし、変化した段だけ通知します。</p></div>
+        <div class="mechanism-step"><b>5</b><strong>その場で再評価</strong><p><code>OnOceanTimeOfDayChanged</code> を受けたCycleが <code>ApplyNow()</code> し、海を即時更新します。</p></div>
+        <div class="mechanism-step"><b>6</b><strong>リリース時に保存</strong><p><code>PointerUp</code> / <code>PointerCaptureOut</code> の1回だけ <code>PlayerPrefs.Save()</code> を呼びます。</p></div>
+      </div>
+      <div class="formula-box">usableWidth = sliderWidth - (edgePadding × 2)
+n             = Clamp01((pointerX - edgePadding) / usableWidth)
+rawHour       = Lerp(4.5, 24.0, n)
+customHour    = Clamp(Round(rawHour / 0.25) × 0.25, 4.5, 24.0)
+label         = HH:mm  // 例: 10.5 → 10:30、24.0 → 24:00
+
+ドラッグ中: SetOceanCustomHour(scene, customHour, persist:false)
+指を離す  : SetOceanCustomHour(scene, currentHour, persist:true)</div>
+      <div class="flow">
+        <span class="step">Pointer X</span><span class="arrow">→</span>
+        <span class="step">0〜1正規化</span><span class="arrow">→</span>
+        <span class="step">4:30〜24:00へ変換</span><span class="arrow">→</span>
+        <span class="step">15分へスナップ</span><span class="arrow">→</span>
+        <span class="step">Profile区間を評価</span><span class="arrow">→</span>
+        <span class="step">描画＋光源を更新</span>
       </div>
       <table>
-        <thead><tr><th>シーン</th><th>既定</th><th>保存キー</th><th>UI導線</th></tr></thead>
+        <thead><tr><th>シーン</th><th>モードOFF時</th><th>カスタム時刻キー</th><th>UI導線</th></tr></thead>
         <tbody>
-          <tr><td>Title</td><td>Real（実時刻＋季節）</td><td><code>settings_ocean_time_of_day_title</code></td><td>設定画面</td></tr>
-          <tr><td>NormalEndless</td><td>Day</td><td><code>settings_ocean_time_of_day_normal</code></td><td>ポーズ画面</td></tr>
-          <tr><td>TimeAttack</td><td>Night</td><td><code>settings_ocean_time_of_day_timeattack</code></td><td>ポーズ画面</td></tr>
-          <tr><td>CenterHit</td><td>GoldenSunset</td><td><code>settings_ocean_time_of_day_centerhit</code></td><td>ポーズ画面</td></tr>
+          <tr><td>Title</td><td>現実時刻＋季節</td><td><code>settings_ocean_custom_hour_title</code></td><td>設定画面</td></tr>
+          <tr><td>NormalEndless</td><td>Day</td><td><code>settings_ocean_custom_hour_normal</code></td><td>ポーズ画面</td></tr>
+          <tr><td>TimeAttack</td><td>Night</td><td><code>settings_ocean_custom_hour_timeattack</code></td><td>ポーズ画面</td></tr>
+          <tr><td>CenterHit</td><td>GoldenSunset</td><td><code>settings_ocean_custom_hour_centerhit</code></td><td>ポーズ画面</td></tr>
         </tbody>
       </table>
-      <div class="flow">
-        <span class="step">タブ選択</span><span class="arrow">→</span>
-        <span class="step">GameSettingsStore保存</span><span class="arrow">→</span>
-        <span class="step">OnOceanTimeOfDayChanged</span><span class="arrow">→</span>
-        <span class="step">Cycle.ApplyNow()</span><span class="arrow">→</span>
-        <span class="step">海が即時切替</span>
+      <div class="grid">
+        <div class="panel good">
+          <h3>連続操作</h3>
+          <ul>
+            <li>範囲は <code>4:30〜24:00</code>、刻みは15分。</li>
+            <li>ドラッグ中は <code>persist:false</code> で即時プレビューし、指を離したときだけ <code>PlayerPrefs.Save()</code>。</li>
+            <li>カスタム時刻では太陽仰角を伊予市相当のモデルから再計算。昼のプラトー内でも光と影が変わる。</li>
+          </ul>
+        </div>
+        <div class="panel warn">
+          <h3>1.3設定の移行</h3>
+          <p>旧5タブは初回参照時に自動移行します。日中→12:00、夕焼け→16:45、日没→17:30、夜→21:00。現実はそのまま現実/デフォルトとして保持します。</p>
+        </div>
       </div>
-    </section>
-
-    <section id="jellyfish">
-      <h2>Ver1.3 クラゲコンパニオン</h2>
+      <h3>Directional Lightはどう傾くか</h3>
       <p class="section-lead">
-        クラゲコンパニオンは、クラリィやプレイヤーの周囲を長時間ふわふわ漂う癒やし要素です。
-        タイトルでは経過時間で増え、ゲームでは距離連動に切り替えられる構造になっています。
+        カスタム時刻では、Profileの色補間とは別に太陽高度を計算し、主光源の <strong>X回転だけ</strong> を更新します。
+        <code>Quaternion.Euler(sunPitch, 0, 0)</code> なので、朝から昼は光が上から差す方向へ深く傾き、午後は逆順で浅くなります。
+        Y（方位）とZ（ロール）は常に0で、東から西へ横切る方位回転は行いません。
       </p>
+      <figure class="sun-figure">
+        <svg viewBox="0 0 920 340" role="img" aria-labelledby="sun-title sun-desc">
+          <title id="sun-title">カスタム時刻によるDirectional LightのX回転</title>
+          <desc id="sun-desc">朝夕は最低28度、10時30分は約50.5度、南中は約58度へX回転が傾く概念図。</desc>
+          <defs>
+            <linearGradient id="sky-line" x1="0" x2="1">
+              <stop offset="0" stop-color="#f7b6c8"/>
+              <stop offset="0.5" stop-color="#ffd86d"/>
+              <stop offset="1" stop-color="#f0a4ba"/>
+            </linearGradient>
+            <marker id="ray-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L7,3 z" fill="#278cc3"/>
+            </marker>
+          </defs>
+          <path d="M100 260 Q460 18 820 260" fill="none" stroke="url(#sky-line)" stroke-width="6" stroke-linecap="round" stroke-dasharray="9 10"/>
+          <line x1="70" y1="260" x2="850" y2="260" stroke="#63a9bd" stroke-width="3"/>
+          <text x="74" y="286" fill="#416a7d" font-size="14">水平線 / 海面基準</text>
+
+          <g>
+            <circle cx="212" cy="169" r="28" fill="#ffd86d" stroke="#f4b835" stroke-width="4"/>
+            <line x1="212" y1="204" x2="258" y2="258" stroke="#278cc3" stroke-width="5" marker-end="url(#ray-arrow)"/>
+            <text x="132" y="120" fill="#155e80" font-size="17" font-weight="700">8:00</text>
+            <text x="132" y="141" fill="#315f73" font-size="14">X = 28°（下限）</text>
+          </g>
+          <g>
+            <circle cx="355" cy="92" r="31" fill="#ffe17f" stroke="#f4b835" stroke-width="4"/>
+            <line x1="355" y1="130" x2="419" y2="258" stroke="#278cc3" stroke-width="5" marker-end="url(#ray-arrow)"/>
+            <text x="277" y="35" fill="#155e80" font-size="17" font-weight="700">10:30</text>
+            <text x="277" y="57" fill="#315f73" font-size="14">X ≈ 50.5°</text>
+          </g>
+          <g>
+            <circle cx="500" cy="55" r="34" fill="#fff0a3" stroke="#f4b835" stroke-width="4"/>
+            <line x1="500" y1="96" x2="500" y2="258" stroke="#278cc3" stroke-width="5" marker-end="url(#ray-arrow)"/>
+            <text x="529" y="37" fill="#155e80" font-size="17" font-weight="700">12:09ごろ</text>
+            <text x="529" y="59" fill="#315f73" font-size="14">X ≈ 58.0°（南中）</text>
+          </g>
+          <g>
+            <circle cx="680" cy="169" r="28" fill="#ffd078" stroke="#eea749" stroke-width="4"/>
+            <line x1="680" y1="204" x2="633" y2="258" stroke="#278cc3" stroke-width="5" marker-end="url(#ray-arrow)"/>
+            <text x="703" y="120" fill="#155e80" font-size="17" font-weight="700">16:45</text>
+            <text x="703" y="141" fill="#315f73" font-size="14">X = 28°（下限）</text>
+          </g>
+          <text x="343" y="320" fill="#245d73" font-size="15" font-weight="700">Xだけ可変　Y = 0° / Z = 0°</text>
+        </svg>
+        <figcaption>概念図。数値はゲームシーンの基準季節 <code>seasonT = 0.5</code>（日の出6:04 / 日の入り18:14）で算出。</figcaption>
+      </figure>
       <div class="grid">
         <div class="card">
-          <h3>生成ルール</h3>
-          <table>
-            <tbody>
-              <tr><th>時間スケジュール</th><td><code>15, 45, 180, 600</code>秒。タイトルでは15秒で1匹、45秒で2匹、3分で3匹、10分で4匹。</td></tr>
-              <tr><th>距離連動</th><td><code>15, 40, 80, 140</code>m。<code>"Bubble"</code>タグの <code>HeadingBall.TotalTravelDistance</code> を読む。</td></tr>
-              <tr><th>同時生成</th><td><code>SPAWN_STAGGER 0.6秒</code> で1匹ずつ。スロット数と <code>maxCompanions</code> で上限。</td></tr>
-              <tr><th>ターゲット</th><td><code>TitleClarieController</code> → <code>PlayerController</code> の順に自動検出。Explicit指定も可能。</td></tr>
-            </tbody>
-          </table>
+          <h3>太陽高度からX回転を求める</h3>
+          <p>緯度は伊予市/松山相当の <code>φ = 33.76°</code>。季節モデルの日の出・日の入りから赤緯δを逆算し、選択時刻の太陽高度eを求めます。</p>
+          <div class="formula-box">solarNoon = (sunrise + sunset) / 2
+H0        = ((sunset - sunrise) / 2) × 15°
+δ         = atan(-cos(H0) / tan(φ))
+H         = (hour - solarNoon) × 15°
+e         = asin(sinφ sinδ + cosφ cosδ cosH)
+
+dayPitch  = max(e, 28°)
+weight    = InverseLerp(-2°, 6°, e)
+sunPitch  = Lerp(authoredPitch, dayPitch, weight)</div>
+          <p class="angle-note">赤緯を独立した天文データから持たず、既存の季節別日長と整合するよう日の出時の高度0°から逆算します。</p>
         </div>
         <div class="card">
-          <h3>配置スロット</h3>
-          <p>中心は <code>target.position + (0, 0.6, 0)</code>。既定はクラリィ周囲4点です。Sceneビューでは選択時ギズモで番号付きの球が表示されます。</p>
+          <h3>代表時刻の傾き</h3>
           <table>
+            <thead><tr><th>時刻</th><th>太陽高度e</th><th>適用するX回転</th></tr></thead>
             <tbody>
-              <tr><th>#1</th><td><code>(-0.80, -0.50, -0.30)</code> 左下</td></tr>
-              <tr><th>#2</th><td><code>(0.85, 0.70, -0.30)</code> 右上</td></tr>
-              <tr><th>#3</th><td><code>(0.95, 0.00, -0.20)</code> 右</td></tr>
-              <tr><th>#4</th><td><code>(-0.85, 0.60, -0.30)</code> 左上</td></tr>
+              <tr><td>4:30</td><td>-19.3°</td><td>Nightの作り込み角度</td></tr>
+              <tr><td>8:00</td><td>23.8°</td><td>28.0°（下限）</td></tr>
+              <tr><td>10:30</td><td>50.5°</td><td>50.5°</td></tr>
+              <tr><td>12:09</td><td>58.0°</td><td>58.0°</td></tr>
+              <tr><td>14:00</td><td>48.8°</td><td>48.8°</td></tr>
+              <tr><td>16:45</td><td>18.4°</td><td>28.0°（下限）</td></tr>
+              <tr><td>18:14</td><td>0.0°</td><td>Profile角度75%＋28°を25%</td></tr>
+              <tr><td>21:00</td><td>-33.1°</td><td>Nightの作り込み角度</td></tr>
             </tbody>
           </table>
         </div>
-      </div>
-      <h3>1匹の状態遷移</h3>
-      <div class="flow">
-        <span class="step">Idle</span><span class="arrow">→</span>
-        <span class="step">Approaching<br>画面外から一定速度</span><span class="arrow">→</span>
-        <span class="step">Attached<br>SmoothDampで追従</span><span class="arrow">→</span>
-        <span class="step">Leaving<br>上方へフェード</span>
       </div>
       <div class="grid">
         <div class="panel good">
-          <h3>動きのロジック</h3>
+          <h3>28°の下限</h3>
+          <p>太陽が低い朝夕に光を水平近くまで倒すと影が極端に長くなるため、日中として扱う区間はX回転を28°以上に保ちます。10:30〜14:00付近は実際の太陽高度をそのまま使います。</p>
+        </div>
+        <div class="panel night">
+          <h3>地平線付近はProfileへ戻す</h3>
+          <p>太陽高度が-2°以下ならプリセット角度、-2〜6°はプリセットから計算角へ滑らかに移行します。Dawn / Sunset / Nightの作り込んだ見え方を壊さず昼の連続変化だけを足します。</p>
+        </div>
+      </div>
+      <p class="note">
+        <strong>非カスタム時:</strong> Titleの現実時刻、および各ゲームモードのデフォルトでは <code>solarHour &lt; 0</code> のため、この実高度補正は行わずProfileの光源角度を使用します。
+        実高度による連続X回転は、ユーザーが「カスタム」を選んだときだけ有効です。
+      </p>
+    </section>
+
+    <section id="jellyfish">
+      <h2>Ver1.4 クラゲコンパニオン救助</h2>
+      <p class="section-lead">
+        クラゲは普段クラリィの周囲を静かに漂い、クラリィが走っても確実に届かない落下だけを引き受けます。
+        助けると決めたら縦に伸びて消え、バブルの下へ現れて真上へ弾き、役目を終えた1匹は上方へ去ります。
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>登場と回数制限</h3>
+          <table>
+            <tbody>
+              <tr><th>時間スケジュール</th><td><code>15, 45, 180, 600</code>秒。タイトルでは15秒で1匹、45秒で2匹、3分で3匹、10分で4匹。</td></tr>
+              <tr><th>Normal距離</th><td><code>20, 55, 120, 260</code>m。<code>"Bubble"</code>タグの移動距離で順に増える。</td></tr>
+              <tr><th>救助上限</th><td>1プレイ <code>maxRescuesPerPlay = 2</code> 回。無限救済を防ぐ。</td></tr>
+              <tr><th>補充待ち</th><td>救助した1匹が去ってから <code>rescueReturnDelay = 20</code> 秒後に補充可能。</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>発動条件</h3>
+          <table>
+            <tbody>
+              <tr><th>残り時間</th><td>低い迎撃点まで概ね <code>1.2</code>秒以内になってから判定。</td></tr>
+              <tr><th>届かない判定</th><td>反応時間0.22秒と走行可能距離を見積もり、さらに0.7m以上不足する場合だけ。</td></tr>
+              <tr><th>画面内</th><td><code>rescueRequireOnScreen</code> が既定ON。見えない場所で勝手に救わない。</td></tr>
+              <tr><th>迎撃高さ</th><td>足元から0.85m。バブル半径0.635mを考慮した地面すれすれの高さ。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <h3>1回の救助フロー</h3>
+      <div class="flow">
+        <span class="step">Attached / Approaching<br>普段はそばで漂う</span><span class="arrow">→</span>
+        <span class="step">WarpOut<br>縦に伸びて消える</span><span class="arrow">→</span>
+        <span class="step">WarpIn / Rescuing<br>下から浮上</span><span class="arrow">→</span>
+        <span class="step">RescueBounce<br>真上へ立て直す</span><span class="arrow">→</span>
+        <span class="step">Leaving<br>上方へ退場</span>
+      </div>
+      <div class="grid">
+        <div class="panel good">
+          <h3>プレイを横取りしない</h3>
           <ul>
-            <li>接近は <code>Vector3.MoveTowards</code> による一定速度。到着時に急に詰める不自然さを防ぐ。</li>
-            <li>追従は <code>Vector3.SmoothDamp</code>。<code>MAX_SMOOTH_DT 0.05</code> と1フレーム移動上限でワープを防止。</li>
-            <li>スロット内で <code>wanderRadius</code> とsin波を使い、固定点ではなく持ち場の中で漂わせる。</li>
-            <li><code>minDistanceFromCenter 0.85</code> でクラリィに近づきすぎない。</li>
+            <li>落下地点を追い回すエスコート機能は実装を残しつつ既定OFF。</li>
+            <li>クラリィの反応時間・現在速度・最高速度から「まだ間に合う」場面は見送る。</li>
+            <li>救助後は水平速度を0にして真上へ弾き、次の一球を自分で追える時間を作る。</li>
+            <li><code>RescueBounce()</code> も通常の <code>OnHeading</code> を通るため、スコア・SE・振動・難易度更新は共通。</li>
           </ul>
         </div>
         <div class="panel night">
-          <h3>アニメとマテリアル</h3>
+          <h3>演出と成立保証</h3>
           <ul>
-            <li><code>jellyfish_animated.fbx</code> + <code>Jellyfish.controller</code> でFBXのベル収縮アニメをループ。</li>
-            <li>Animator+Controllerを検出した場合、コード側の拍動/上下浮遊/傾きは自動OFF。</li>
-            <li><code>Jellyfish.mat</code> はURP/Lit Transparent、BaseColorは白寄り水色、Alpha 0.45。</li>
-            <li>フェードは <code>MaterialPropertyBlock</code> で <code>_BaseColor.a</code> を個体ごとに更新。</li>
+            <li>泳いで横断せず、<code>WarpOut → WarpIn</code> の伸縮と粒子で救助地点へ移動。</li>
+            <li>残り時間が短い場合はワープ時間を比率維持のまま短縮。</li>
+            <li>一度引き受けた救助は、落下寸前なら迎撃点へ寄せて成立を優先。</li>
+            <li>成立位置へUI Toolkitの吹き出しを約2秒表示し、何が起きたかを明示。</li>
           </ul>
         </div>
       </div>
-      <div class="codebox">Approaching:
-  smoothPos = MoveTowards(smoothPos, followTarget, approachSpeed * dt)
-  if Distance(smoothPos, followTarget) <= arriveDistance:
-      phase = Attached
-      velocity = 0
+      <div class="codebox">Bubble descent prediction:
+  HeadingBall.TryPredictDescent(interceptHeight)
+  compare remaining time with Clarie reaction + reachable distance
 
-Attached:
-  smoothPos = SmoothDamp(prev, followTarget, velocity, followSmoothTime, maxFollowSpeed, clampedDt)
-  clamp per-frame movement to maxFollowSpeed * clampedDt
+If Clarie cannot reach:
+  closestCompanion.BeginWarpRescue(appearBelowBubble, interceptPoint, speed, timeBudget)
+  companion contacts Bubble → HeadingBall.RescueBounce()
+  JellyfishCompanionManager.OnBubbleRescued(worldPosition)
+  JellyfishRescueHud.Show("くらげがひろってくれた！")
+  companion.Leave()</div>
+    </section>
 
-Animated FBX:
-  if Animator + RuntimeAnimatorController exists:
-      position = smoothPos
-      rotation = uprightEuler
-      localScale = baseScale
-      skip procedural pulse/bob/sway</div>
+    <section id="clarie-hair">
+      <h2>GameSceneのクラリィ髪モーション</h2>
+      <p class="section-lead">
+        TitleのUnityChan SpringBoneと同じ先端Verlet・長さ拘束・回転合成を、ゲーム本編向けの軽量ドライバ1個にまとめました。
+        走り出し、停止、旋回に毛先が少し遅れて追従し、従来の固定的な髪へ控えめなふわっと感を加えます。
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>自動セットアップ</h3>
+          <ul>
+            <li><code>RuntimeInitializeOnLoadMethod</code> と <code>Manager</code> の二重保証で、<code>PlayerController</code> を持つクラリィへ自動追加。</li>
+            <li>Title / NameRegisterには追加せず、既存の <code>SpringBone</code> があるモデルも必ずスキップ。</li>
+            <li>TitleとGameで12本のチェーン定義を <code>ClarieHairChains</code> から共有。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>軽量化と安全補正</h3>
+          <ul>
+            <li>62セグメントを1コンポーネントでまとめ、固定60Hzで更新。</li>
+            <li>身体コライダーとの最大約800距離判定/フレームを省略。</li>
+            <li>移動93%・旋回35%を仮想先端へ継承し、残りを柔らかな遅れとして使う。</li>
+            <li>最大偏角42°、0.6秒のソフトスタート、1.5m以上の瞬間移動で履歴リセット。</li>
+          </ul>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>項目</th><th>既定値</th><th>役割</th></tr></thead>
+        <tbody>
+          <tr><td><code>stiffnessForce / dragForce</code></td><td>0.015 / 0.9</td><td>Title互換の戻る力と減衰。</td></tr>
+          <tr><td><code>dynamicRatio / motionScale</code></td><td>0.7 / 0.81</td><td>計算結果の最終反映率。ゲームでは揺れ幅を控えめにする。</td></tr>
+          <tr><td><code>strandVariation</code></td><td>0.08</td><td>12毛束へ微差をつけ、左右2塊への同期を崩す。</td></tr>
+          <tr><td><code>outwardForce</code></td><td>0.00022</td><td>毛先を頭の外へ保ち、身体側への巻き付きを軽減。</td></tr>
+          <tr><td><code>inwardBendReduction</code></td><td>0.3</td><td>顔・首・胴体側へ入る曲がりだけを30%戻す。</td></tr>
+        </tbody>
+      </table>
+      <p class="note">GameScene版は衣装コライダーを持たないため、全衣装での貫通は目視確認対象です。ヘディング衝撃用の <code>AddImpulse()</code> は拡張点として用意されていますが、Ver1.4時点では未接続です。</p>
     </section>
 
     <section id="features">
@@ -977,9 +1248,9 @@ Animated FBX:
         <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/mode_normal.png" alt=""></div><div><h3>ヘディングゲーム</h3><p>Bubble衝突、スコア、距離、命中率、難易度ランプ、コンボガード、壁反射、破裂。</p></div></div>
         <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/mode_timeattack.png" alt=""></div><div><h3>モード選択</h3><p>Normal / Time Attack / Center Hit をTitleのカードから選択。</p></div></div>
         <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/clock_icon.png" alt=""></div><div><h3>Clock Mode</h3><p>時計、ポモドーロ、タイマー。作業用・勉強用の眺める体験。</p></div></div>
-        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/jellyicon.png" alt=""></div><div><h3>Jellyfish Companion</h3><p>時間/距離でクラゲが増え、クラリィの周りを漂う。</p></div></div>
-        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/settings_icon.png" alt=""></div><div><h3>Settings</h3><p>BGM、SE、振動、海時間。UI Toolkitで構築。</p></div></div>
-        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/pause_icon.png" alt=""></div><div><h3>Pause</h3><p>再開、タイトル復帰、海時間切替。timeScale=0でも即時反映。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/jellyicon.png" alt=""></div><div><h3>Jellyfish Rescue</h3><p>時間/距離で増えるクラゲが、確実に届かない落下を1プレイ最大2回まで救助。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/settings_icon.png" alt=""></div><div><h3>Settings</h3><p>BGM、SE、振動、海の光モードと4:30〜24:00の時刻スライダー。UI Toolkitで構築。</p></div></div>
+        <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/pause_icon.png" alt=""></div><div><h3>Pause</h3><p>再開、タイトル復帰、カスタム時刻変更。timeScale=0でも海へ即時反映。</p></div></div>
         <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/ranking_icon.png" alt=""></div><div><h3>Ranking</h3><p>PlayFabでランキング取得。未ログイン時はローカル表示。</p></div></div>
         <div class="feature-card"><div class="feature-icon"><img src="BubbleSiteAssets/shop_icon.png" alt=""></div><div><h3>Store / Ads</h3><p>リワード広告、バナー、広告削除IAP、購入復元。</p></div></div>
       </div>
@@ -1102,12 +1373,13 @@ Animated FBX:
     <section id="technical">
       <h2>技術仕様</h2>
       <dl class="spec-list">
-        <dt>エンジン</dt><dd>Unity 6000.3.10f1、Universal Render Pipeline。</dd>
+        <dt>エンジン</dt><dd>Unity 6000.5.6f1、Universal Render Pipeline。</dd>
         <dt>入力</dt><dd>Unity Input System。モバイル向けタッチ/仮想入力、プレイヤー移動。</dd>
         <dt>UI</dt><dd>UI Toolkit（<code>UIDocument</code>、UXML、USS）。UGUI Canvasは基本使用しない。</dd>
         <dt>描画</dt><dd>Bubble Shader、URP透明描画、UnderwaterDecorSetup、Renderer Feature、Particle System。</dd>
-        <dt>水中演出</dt><dd>カースティクス、光柱、浮遊粒子、スクリーン屈折、深度フォグ、魚群、サメ、クラゲ。</dd>
-        <dt>保存</dt><dd>PlayerPrefs。音量/BGM/振動、海時間、広告削除状態、ローカル統計など。</dd>
+        <dt>水中演出</dt><dd>カースティクス、光柱、浮遊粒子、スクリーン屈折、深度フォグ、魚群、サメ、救助クラゲ。</dd>
+        <dt>キャラクター</dt><dd>TitleはUnityChan SpringBone、GameSceneは <code>ClarieHairMotion</code> の軽量62セグメント髪モーション。</dd>
+        <dt>保存</dt><dd>PlayerPrefs。音量/BGM/振動、海の光モード・カスタム時刻、広告削除状態、ローカル統計など。</dd>
         <dt>オンライン</dt><dd>PlayFabログイン/ランキング/Statistic送信。未ログイン時はローカルフォールバック。</dd>
         <dt>収益化</dt><dd>AdMobリワード/バナー、IAP広告削除、購入復元。</dd>
         <dt>ネイティブ</dt><dd>iOS/Android触覚フィードバック、Store Review、Native Share、iOS表示名ローカライズ。</dd>
@@ -1117,10 +1389,11 @@ Animated FBX:
     <section id="scripts">
       <h2>スクリプト構成</h2>
       <div class="script-map">
-        <div class="script-row"><strong>GameSceneLogic</strong><span><code>Manager.cs</code>、<code>HeadingBall.cs</code>、<code>PlayerController.cs</code>、<code>PauseController.cs</code>、<code>GameMode.cs</code>。ゲーム進行、Bubble物理、入力、ポーズ、モード/海時間シーン区分。</span></div>
-        <div class="script-row"><strong>Settings / UI</strong><span><code>SettingsController.cs</code>、<code>GameSettingsStore.cs</code>、UXML/USS。音量・振動・海時間タブを保存/反映。</span></div>
-        <div class="script-row"><strong>Ocean Time</strong><span><code>OceanTimeOfDayCycle.cs</code>、<code>OceanCycleBootstrap.cs</code>、<code>OceanTimeOfDayProfile.cs</code>、<code>OceanTimeOfDayProfileSet.cs</code>、Editor。24hサイクル、固定Profile、Dawn、soft-only適用。</span></div>
-        <div class="script-row"><strong>Jellyfish</strong><span><code>JellyfishCompanion.cs</code>、<code>JellyfishCompanionManager.cs</code>、<code>JellyfishCompanionSetup.cs</code>。クラゲ生成、追従、FBXアニメ、URP半透明Material生成。</span></div>
+        <div class="script-row"><strong>GameSceneLogic</strong><span><code>Manager.cs</code>、<code>HeadingBall.cs</code>、<code>PlayerController.cs</code>、<code>PauseController.cs</code>、<code>GameMode.cs</code>。ゲーム進行、Bubble物理、救助通知、入力、ポーズ、モード/海時間シーン区分。</span></div>
+        <div class="script-row"><strong>Settings / UI</strong><span><code>SettingsController.cs</code>、<code>GameSettingsStore.cs</code>、<code>JellyfishRescueHud.cs</code>、UXML/USS。音量・振動・海の光スライダー・救助吹き出しを保存/表示。</span></div>
+        <div class="script-row"><strong>Ocean Time</strong><span><code>OceanTimeOfDayCycle.cs</code>、<code>OceanCycleBootstrap.cs</code>、<code>OceanTimeOfDayProfile.cs</code>、<code>OceanTimeOfDayProfileSet.cs</code>、Editor。24hサイクル、カスタム時刻、太陽高度、soft-only適用。</span></div>
+        <div class="script-row"><strong>Jellyfish</strong><span><code>JellyfishCompanion.cs</code>、<code>JellyfishCompanionManager.cs</code>、<code>JellyfishRescueDirector.cs</code>、<code>JellyfishWarpEffect.cs</code>。生成、追従、落下予測、ワープ救助、退場・補充。</span></div>
+        <div class="script-row"><strong>Clarie Hair</strong><span><code>ClarieHairMotion.cs</code>、<code>ClarieHairChains.cs</code>、<code>ClarieHairSpringBoneSetup.cs</code>。Game用軽量髪物理、Titleとのチェーン定義共有、Editorセットアップ。</span></div>
         <div class="script-row"><strong>Bubble Effects</strong><span><code>BubbleBurst.cs</code>、<code>BubbleEffect.cs</code>、<code>BubbleRemnant.cs</code>、<code>BlobShadow.cs</code>。破裂、ぷにょ変形、残骸、影。</span></div>
         <div class="script-row"><strong>Sea Life</strong><span><code>FishParticleManager.cs</code>、<code>SeaLifeDecorSetup.cs</code>、<code>SeaLifeStreamingDecor.cs</code>、<code>SharkSpawner.cs</code>、<code>SharkSwimmer.cs</code>。魚、サメ、装飾、品質プリセット。</span></div>
         <div class="script-row"><strong>Network / Store</strong><span><code>LeaderboardClient.cs</code>、AdMob、IAP、StoreReview、NativeShare。ランキング、広告、購入、レビュー、共有。</span></div>
@@ -1140,8 +1413,8 @@ Animated FBX:
         <tbody>
           <tr><td><code>button_tapped</code></td><td><code>screen</code>、<code>button</code></td><td>すべてのボタン操作を共通形式で送信。UGS初期化前は送信しない。</td></tr>
           <tr><td>Title</td><td><code>screen=Title</code></td><td><code>Start</code>、<code>Start_Normal</code>、<code>Start_TimeAttack</code>、<code>Start_CenterHit</code>、<code>ClockMode</code>、<code>Settings</code>、<code>Ranking</code>、<code>Store</code>、<code>Closet</code>。</td></tr>
-          <tr><td>Game</td><td><code>screen=Game</code></td><td><code>Start</code>、<code>Pause</code>、<code>Resume</code>、<code>Retry</code>、<code>StartOver</code>、<code>Title</code>、<code>Share</code>、<code>ReviveAd</code>、<code>Time_Day</code> など。</td></tr>
-          <tr><td>Settings / Pause</td><td><code>screen=Settings</code> または <code>Game</code></td><td><code>BgmSelect</code>、<code>VibrationSelect</code>、<code>Contact</code>、<code>Time_Real</code> / <code>Time_Day</code> / <code>Time_Sunset</code> など。</td></tr>
+          <tr><td>Game</td><td><code>screen=Game</code></td><td><code>Start</code>、<code>Pause</code>、<code>Resume</code>、<code>Retry</code>、<code>StartOver</code>、<code>Title</code>、<code>Share</code>、<code>ReviveAd</code>、<code>Light_Custom</code> など。</td></tr>
+          <tr><td>Settings / Pause</td><td><code>screen=Settings</code> または <code>Game</code></td><td><code>BgmSelect</code>、<code>VibrationSelect</code>、<code>Contact</code>、<code>Light_Real</code> / <code>Light_Custom</code>。スライダーの15分刻み変更自体はボタンイベントに含めない。</td></tr>
           <tr><td>ClockMode</td><td><code>screen=ClockMode</code></td><td><code>Tab_Clock</code>、<code>Play_Pomodoro</code>、<code>Pause_Timer</code>、<code>Reset_Timer</code>、<code>Close</code>、<code>Exit</code>。</td></tr>
           <tr><td>Closet / Store / Ranking</td><td>画面名 + 商品/操作名</td><td><code>Equip_outfit_*</code>、<code>Exchange_outfit_*</code>、<code>Store_outfit_*</code>、<code>Tab_InGame</code>、<code>Tab_RealMoney</code>、<code>Restore</code>、<code>SelectType</code>、<code>SelectChoice</code>。</td></tr>
         </tbody>
@@ -1179,24 +1452,36 @@ Animated FBX:
     </section>
 
     <section id="release-check">
-      <h2>Ver1.3 リリース確認観点</h2>
+      <h2>Ver1.4 リリース確認観点</h2>
       <div class="grid">
         <div class="card">
-          <h3>海時間</h3>
+          <h3>海の光</h3>
           <ul>
-            <li>TitleでReal選択時、端末時刻に応じた見た目になる。</li>
-            <li>設定タブでDay/Gold/Sunset/Nightへ切り替わり、保存後も維持される。</li>
-            <li>ゲーム中ポーズで海時間を切り替え、timeScale=0でも即時反映される。</li>
+            <li>Titleで現実時刻を選ぶと、端末時刻と季節に応じた見た目になる。</li>
+            <li>カスタム時刻を4:30 / 10:30 / 16:45 / 17:30 / 21:00 / 24:00で動かし、海と太陽が連続変化する。</li>
+            <li>ゲーム中ポーズでもスライダーが <code>timeScale=0</code> のまま即時反映される。</li>
             <li>Normal/TimeAttack/CenterHitの保存スロットが混ざらない。</li>
+            <li>1.3の旧5タブ設定が対応するカスタム時刻へ1回だけ移行される。</li>
           </ul>
         </div>
         <div class="card">
-          <h3>クラゲ</h3>
+          <h3>クラゲ救助</h3>
           <ul>
-            <li>Companion Prefabが各シーンで設定済み。</li>
-            <li>タイトル滞在15秒以降に画面外から自然に登場する。</li>
-            <li>Animator付きFBXではコード拍動がOFFになり、二重アニメにならない。</li>
-            <li>シーン遷移時にターゲット消失で自滅し、不要な残骸が残らない。</li>
+            <li>クラリィが届く落下を横取りせず、確実に届かない画面内の落下だけを救う。</li>
+            <li>ワープの伸縮・粒子・浮上・真上へのバウンス・上方退場が一連で見える。</li>
+            <li>救助が通常のスコア/SE/触覚/難易度更新を通り、吹き出しが約2秒表示される。</li>
+            <li>1プレイ2回で止まり、退場後20秒は補充されない。</li>
+            <li>落下寸前でも、一度引き受けた救助が途中キャンセルされない。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>クラリィの髪</h3>
+          <ul>
+            <li>Normal / TimeAttack / CenterHitで自動追加され、TitleのSpringBoneと二重起動しない。</li>
+            <li>走り出し・停止・左右旋回で、毛束が控えめに遅れて戻る。</li>
+            <li>120fpsでも物理更新は固定60Hzで、フレームレートによる揺れ方の差が大きくならない。</li>
+            <li>復活などの位置復元で履歴がリセットされ、髪が大きく飛ばない。</li>
+            <li>全12衣装で胴体・顔への目立つ貫通がないか目視確認する。</li>
           </ul>
         </div>
       </div>
@@ -1206,14 +1491,14 @@ Animated FBX:
       <h2>Appendix / 関連解説書</h2>
       <p class="section-lead">同じ <code>Docs</code> ディレクトリにある実装解説を、仕様書の補足として参照できます。</p>
       <div class="doc-links">
-        <a class="doc-link" href="../OceanTimeOfDayCycleGuide.html"><strong>Ocean Time Of Day Cycle Guide</strong><span>Ver1.3の24時間サイクル、Dawn、季節、soft-only適用、設定/ポーズ連携。</span></a>
-        <a class="doc-link" href="../JellyfishCompanionGuide.html"><strong>Jellyfish Companion Guide</strong><span>クラゲの生成スロット、登場タイミング、追従、FBXアニメ、Editorセットアップ。</span></a>
+        <a class="doc-link" href="../OceanTimeOfDayCycleGuide.html"><strong>Ocean Time Of Day Cycle Guide</strong><span>24時間サイクル、Dawn、季節、soft-only適用の基礎。Ver1.4のスライダー差分は本仕様書を参照。</span></a>
+        <a class="doc-link" href="../JellyfishCompanionGuide.html"><strong>Jellyfish Companion Guide</strong><span>クラゲの生成スロット、登場タイミング、追従、FBXアニメの基礎。Ver1.4の救助差分は本仕様書を参照。</span></a>
         <a class="doc-link" href="../OceanTimeOfDayImplementationGuide.html"><strong>Ocean Time Of Day Implementation Guide</strong><span>従来のProfile/Controller実装、Day/Sunset/GoldenSunset/Nightの作成・適用。</span></a>
         <a class="doc-link" href="../FishParticleManager.html"><strong>Fish Particle Manager</strong><span>魚群表現、魚種設定、Particle System、近接フェード、遠景トント。</span></a>
         <a class="doc-link" href="../UnderwaterEffectsSpec.html"><strong>Underwater Effects Spec</strong><span>カースティクス、光柱、スクリーン屈折、海中粒子など水中演出全体。</span></a>
         <a class="doc-link" href="../UnderwaterRendererFeature.html"><strong>Underwater Renderer Feature</strong><span>URP Renderer Feature と水中ポストエフェクトの技術詳細。</span></a>
         <a class="doc-link" href="../TitleClarieController.html"><strong>Title Clarie Controller</strong><span>タイトル画面のクラリィ挙動、待機・反応・状態遷移。</span></a>
-        <a class="doc-link" href="../ClarieModelTechGuide.html"><strong>Clarie Model Tech Guide</strong><span>クラリィモデル、アニメーション、髪・腕・セットアップの技術メモ。</span></a>
+        <a class="doc-link" href="../ClarieModelTechGuide.html"><strong>Clarie Model Tech Guide</strong><span>クラリィモデル、Title側SpringBone、髪・腕・セットアップの技術メモ。</span></a>
         <a class="doc-link" href="../AdMobImplementationGuide.html"><strong>AdMob Implementation Guide</strong><span>広告初期化、リワード、バナー、ログ確認。</span></a>
         <a class="doc-link" href="../StoreIAPGuide.html"><strong>Store IAP Guide</strong><span>広告削除IAP、購入復元、ストア導線。</span></a>
         <a class="doc-link" href="../StoreReviewGuide.html"><strong>Store Review Guide</strong><span>レビュー依頼の条件、OS依存挙動、実装上限。</span></a>
@@ -1222,8 +1507,8 @@ Animated FBX:
     </section>
 
     <div class="footer">
-      <strong>クラリィのぷくぷくシャボン玉はこび Ver1.3.0 仕様書</strong><br>
-      初版作成日: 2026-06-22 / 実機素材更新日: 2026-07-27
+      <strong>クラリィのぷくぷくシャボン玉はこび Ver1.4.0 仕様書</strong><br>
+      初版作成日: 2026-08-16 / Unity Game View追加収録日: 2026-08-16
     </div>
   </main>
 </body>
